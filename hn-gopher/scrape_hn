@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+
+import os
+import io
+import shutil
+import logging
+import argparse
+import textwrap
+from datetime import datetime
+
+import requests
+
+
+HN_URL = 'https://hacker-news.firebaseio.com/v0/'
+HN_SEARCH_URL = 'https://hn.algolia.com/api/v1/'
+
+_parser = argparse.ArgumentParser()
+_parser.add_argument('--log-file')
+_parser.add_argument('--data-dir', default='/Users/mlazar/Repos/hn-gopher/hn-gopher/var/gopher')
+_parser.add_argument('--page-size', default=20)
+_parser.add_argument('--page-count', default=5)
+_parser.add_argument('--line-width', default=67)
+args = _parser.parse_args()
+
+_logger = logging.getLogger('scrape_hn')
+logging.basicConfig(filename=args.log_file, level=logging.INFO)
+
+
+def sanitize(text):
+    # 7-bit ASCII is good enough for 1991
+    return ''.join([i if ord(i) < 128 else '?' for i in text])
+
+
+def humanize_timestamp(timestamp):
+    timedelta = datetime.utcnow() - datetime.fromtimestamp(timestamp)
+
+    seconds = int(timedelta.total_seconds())
+    if seconds < 60:
+        return 'moments ago'
+    minutes = seconds // 60
+    if minutes < 60:
+        return '%d minutes ago' % minutes
+    hours = minutes // 60
+    if hours < 24:
+        return '%d hours ago' % hours
+    days = hours // 24
+    if days < 30:
+        return '%d days ago' % days
+    months = days // 30.4
+    if months < 12:
+        return '%d months ago' % months
+    years = months // 12
+    return '%d years ago' % years
+
+
+text_wrapper = textwrap.TextWrapper(args.line_width)
+
+session = requests.session()
+resp = session.get('{0}{1}.json'.format(HN_URL, 'topstories'))
+resp.raise_for_status()
+data = resp.json()
+
+# Fetch the individual stories
+stories = []
+for item_id in data:
+    resp = session.get('{0}item/{1}.json'.format(HN_URL, item_id))
+    resp.raise_for_status()
+    data = resp.json()
+    if data['type'] in ('story', 'job'):
+        stories.append(data)
+        if len(stories) > args.page_size * args.page_count:
+            # The api returns ~400 items but I'm not interested in serving that many
+            break
+
+pages = [stories[i:i+args.page_size] for i in range(args.page_count)]
+
+for i, page in enumerate(pages):
+    buffer = []
+    buffer.extend(['i[Y] Hacker News (live)', 'i', '1(..back)\t/'])
+
+    for j, story in enumerate(page, start=1):
+        index = i + j
+
+        buffer.append('i')
+
+        # Title and URL
+        title = '{0}. {1}'.format(index, sanitize(story['title']))
+        lines = text_wrapper.wrap(title)
+        if story.get('url'):
+            url = sanitize(story['url'])
+            buffer.extend(['h{0}\tURL:{1}'.format(l, url) for l in lines])
+        else:
+            url = '/items/{0}'.format(story['id'])
+            buffer.extend(['1{0}\t{1}'.format(l, url) for l in lines])
+
+        # Additional info
+        if story['type'] == 'job':
+            info = 'i{0} points {1}'.format(
+                story['score'],
+                humanize_timestamp(story['time']))
+            buffer.extend([info])
+        else:
+            info = 'i{0} points by {1} {2} | {3} comments'.format(
+                story['score'],
+                sanitize(story['by']),
+                humanize_timestamp(story['time']),
+                story['descendants'])
+            comments = '1View comments\t/items/{0}'.format(story['id'])
+            buffer.extend([info, comments])
+
+    page_dir = '{0}/live/p{1}'.format(args.data_dir, i+1)
+    os.makedirs(page_dir, exist_ok=True)
+
+    gophermap = page_dir + '/gophermap'
+    with io.open(gophermap, 'w+', encoding='ascii', errors='replace') as fp:
+        fp.writelines('{0}\n'.format(line) for line in buffer)

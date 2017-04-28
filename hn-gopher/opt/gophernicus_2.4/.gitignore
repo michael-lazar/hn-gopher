@@ -1,0 +1,25 @@
+#
+# Build leftovers
+#
+*.o
+files.h
+functions.h
+README.options
+bin2c
+in.gophernicus
+
+#
+# Release files
+#
+*.gz
+
+#
+# Debian packaging leftovers
+#
+build-stamp
+debian/files
+debian/gophernicus.debhelper.log
+debian/gophernicus.postrm.debhelper
+debian/gophernicus.substvars
+debian/gophernicus/
+
