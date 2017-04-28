@@ -80,7 +80,7 @@ for page in range(1, args.page_count + 1):
         '1(home)\t/']
 
     if page != 1:
-        buffer.extend(['i', '1(prev)\t/live/p{0}'.format(page - 1)])
+        buffer.extend(['i', '1(previous page)\t/live/p{0}'.format(page - 1)])
 
     for story in islice(story_gen, args.page_size):
         index += 1
@@ -112,7 +112,7 @@ for page in range(1, args.page_count + 1):
             buffer.extend([info, comments])
 
     if page != args.page_count:
-        buffer.extend(['i', '1(next)\t/live/p{0}'.format(page + 1)])
+        buffer.extend(['i', '1(next page)\t/live/p{0}'.format(page + 1)])
 
     page_dir = '{0}/live/p{1}'.format(args.data_dir, page)
     os.makedirs(page_dir, exist_ok=True)
