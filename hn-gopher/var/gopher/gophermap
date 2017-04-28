@@ -28,7 +28,7 @@ iview a screenshot of the most recent stories, or search the archive
 ito see what was popular on a particular date.
 i___________________________________________________________________
 i
-1Live Feed (last updated 5 hrs ago)	/live/p1/
+=echo "1Live Feed (last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)	/live/p1/"
 1Archive	/archive
 7Search	/query
 i

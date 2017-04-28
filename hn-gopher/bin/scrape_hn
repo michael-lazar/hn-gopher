@@ -2,10 +2,10 @@
 
 import os
 import io
-import shutil
 import logging
 import argparse
 import textwrap
+from itertools import islice
 from datetime import datetime
 
 import requests
@@ -16,7 +16,7 @@ HN_SEARCH_URL = 'https://hn.algolia.com/api/v1/'
 
 _parser = argparse.ArgumentParser()
 _parser.add_argument('--log-file')
-_parser.add_argument('--data-dir', default='/Users/mlazar/Repos/hn-gopher/hn-gopher/var/gopher')
+_parser.add_argument('--data-dir', default='/var/gopher')
 _parser.add_argument('--page-size', default=20)
 _parser.add_argument('--page-count', default=5)
 _parser.add_argument('--line-width', default=67)
@@ -53,34 +53,37 @@ def humanize_timestamp(timestamp):
     return '%d years ago' % years
 
 
+def story_generator(stories):
+    for story_id in stories:
+        resp = session.get('{0}item/{1}.json'.format(HN_URL, story_id))
+        resp.raise_for_status()
+        data = resp.json()
+        if data['type'] in ('story', 'job'):
+            yield data
+
+
 text_wrapper = textwrap.TextWrapper(args.line_width)
 
+_logger.info('Fetching top story IDs')
 session = requests.session()
 resp = session.get('{0}{1}.json'.format(HN_URL, 'topstories'))
 resp.raise_for_status()
 data = resp.json()
 
-# Fetch the individual stories
-stories = []
-for item_id in data:
-    resp = session.get('{0}item/{1}.json'.format(HN_URL, item_id))
-    resp.raise_for_status()
-    data = resp.json()
-    if data['type'] in ('story', 'job'):
-        stories.append(data)
-        if len(stories) > args.page_size * args.page_count:
-            # The api returns ~400 items but I'm not interested in serving that many
-            break
+story_gen, index = story_generator(data), 0
+for page in range(1, args.page_count + 1):
+    _logger.info('Fetching stories on page %s', page)
 
-pages = [stories[i:i+args.page_size] for i in range(args.page_count)]
+    buffer = [
+        'i[Y] Hacker News (LIVE) - page {0}'.format(page),
+        'i',
+        '1(home)\t/']
 
-for i, page in enumerate(pages):
-    buffer = []
-    buffer.extend(['i[Y] Hacker News (live)', 'i', '1(..back)\t/'])
+    if page != 1:
+        buffer.extend(['i', '1(prev)\t/live/p{0}'.format(page - 1)])
 
-    for j, story in enumerate(page, start=1):
-        index = i + j
-
+    for story in islice(story_gen, args.page_size):
+        index += 1
         buffer.append('i')
 
         # Title and URL
@@ -108,9 +111,15 @@ for i, page in enumerate(pages):
             comments = '1View comments\t/items/{0}'.format(story['id'])
             buffer.extend([info, comments])
 
-    page_dir = '{0}/live/p{1}'.format(args.data_dir, i+1)
+    if page != args.page_count:
+        buffer.extend(['i', '1(next)\t/live/p{0}'.format(page + 1)])
+
+    page_dir = '{0}/live/p{1}'.format(args.data_dir, page)
     os.makedirs(page_dir, exist_ok=True)
 
     gophermap = page_dir + '/gophermap'
+    _logger.info('Generating gophermap %s', gophermap)
     with io.open(gophermap, 'w+', encoding='ascii', errors='replace') as fp:
         fp.writelines('{0}\n'.format(line) for line in buffer)
+
+_logger.info('Finished!')

@@ -29,6 +29,7 @@ Vagrant.configure(2) do |config|
     # Create symlinks to the data files for easy development
     rm -rf /var/gopher
     ln -s /vagrant/hn-gopher/var/gopher /var/gopher
+    ln -s /vagrant/hn-gopher/bin/* /usr/local/bin
 
     # Test the server
     echo -e "127.0.0.1\thngopher.com" >> /etc/hosts

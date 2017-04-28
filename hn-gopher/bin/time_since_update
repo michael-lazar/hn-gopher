@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+"""
+Prints a human-readable relative time since a file was modified
+
+$ time_since_update /etc/hosts
+34 minutes ago
+"""
+
+import os
+import sys
+import time
+
+filename = sys.argv[1]
+file_timestamp = os.path.getmtime(filename)
+seconds = int(time.time() - file_timestamp)
+
+minutes = seconds // 60
+if minutes < 60:
+    print('%d minutes ago' % minutes)
+    sys.exit(0)
+hours = minutes // 60
+if hours < 24:
+    print('%d hours ago' % hours)
+    sys.exit(0)
+days = hours // 24
+if days < 30:
+    print('%d days ago' % days)
+    sys.exit(0)
