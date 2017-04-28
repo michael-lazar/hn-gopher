@@ -16,13 +16,22 @@ seconds = int(time.time() - file_timestamp)
 
 minutes = seconds // 60
 if minutes < 60:
-    print('%d minutes ago' % minutes)
+    if minutes == 1:
+        print('%d minute ago' % minutes)
+    else:
+        print('%d minutes ago' % minutes)
     sys.exit(0)
 hours = minutes // 60
 if hours < 24:
-    print('%d hours ago' % hours)
+    if hours == 1:
+        print('%d hour ago' % minutes)
+    else:
+        print('%d hours ago' % hours)
     sys.exit(0)
 days = hours // 24
 if days < 30:
-    print('%d days ago' % days)
+    if days == 1:
+        print('%d day ago' % days)
+    else:
+        print('%d days ago' % days)
     sys.exit(0)
