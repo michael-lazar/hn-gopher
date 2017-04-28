@@ -21,6 +21,7 @@ if minutes < 60:
     else:
         print('%d minutes ago' % minutes)
     sys.exit(0)
+
 hours = minutes // 60
 if hours < 24:
     if hours == 1:
@@ -28,10 +29,10 @@ if hours < 24:
     else:
         print('%d hours ago' % hours)
     sys.exit(0)
+
 days = hours // 24
-if days < 30:
-    if days == 1:
-        print('%d day ago' % days)
-    else:
-        print('%d days ago' % days)
-    sys.exit(0)
+if days == 1:
+    print('%d day ago' % days)
+else:
+    print('%d days ago' % days)
+sys.exit(0)
