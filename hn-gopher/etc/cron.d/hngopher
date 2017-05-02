@@ -1,1 +1,1 @@
-* * * * *   /usr/local/bin/scrape_hn --log-file /var/log/scrape_hn
+0 * * * *   /usr/local/bin/scrape_hn --log-file /var/log/scrape_hn
