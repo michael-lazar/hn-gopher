@@ -30,6 +30,7 @@ Vagrant.configure(2) do |config|
     rm -rf /var/gopher
     ln -s /vagrant/hn-gopher/var/gopher /var/gopher
     ln -s /vagrant/hn-gopher/bin/* /usr/local/bin
+    ln -s /vagrant/hn-gopher/etc/cron.d/hngopher /etc/cron.d/hngopher
 
     # Test the server
     echo -e "127.0.0.1\thngopher.com" >> /etc/hosts
