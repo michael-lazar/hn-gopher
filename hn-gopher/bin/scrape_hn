@@ -7,6 +7,7 @@ import argparse
 import textwrap
 from itertools import islice
 from datetime import datetime
+from logging.handlers import RotatingFileHandler
 
 import requests
 
@@ -22,8 +23,21 @@ _parser.add_argument('--page-count', default=10)
 _parser.add_argument('--line-width', default=67)
 args = _parser.parse_args()
 
-_logger = logging.getLogger('scrape_hn')
-logging.basicConfig(filename=args.log_file, level=logging.INFO)
+
+def setup_log(filename):
+    logger = logging.getLogger('scrape_hn')
+    logger.setLevel(logging.INFO)
+
+    if filename:
+        handler = RotatingFileHandler(
+            filename=filename, maxBytes=5*1024*1024, backupCount=5)
+    else:
+        handler = logging.StreamHandler()
+
+    fmt = logging.Formatter('%(asctime)s:%(levelname)s:%(filename)s:%(message)s')
+    handler.setFormatter(fmt)
+    logger.addHandler(handler)
+    return logger
 
 
 def sanitize(text):
@@ -61,6 +75,8 @@ def story_generator(stories):
         if data['type'] in ('story', 'job'):
             yield data
 
+
+_logger = setup_log(args.log_file)
 
 text_wrapper = textwrap.TextWrapper(args.line_width)
 
