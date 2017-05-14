@@ -17,3 +17,5 @@ cp -R $DIR/hn-gopher/etc/cron.d/* /etc/cron.d/
 
 rm /etc/default/gophernicus
 cp $DIR/hn-gopher/opt/gophernicus_*/gophernicus.env /etc/default/gophernicus
+
+/usr/local/bin/scrape_hn
