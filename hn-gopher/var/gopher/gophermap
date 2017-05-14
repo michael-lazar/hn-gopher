@@ -1,14 +1,14 @@
-i     _    _            _               _   _                   
+i     _    _            _               _   _
 i    | |  | |          | |             | \ | |  hngopher.com:70                 
 i    | |__| | __ _  ___| | _____ _ __  |  \| | _____      _____ 
 i    |  __  |/ _` |/ __| |/ / _ \ '__| | . ` |/ _ \ \ /\ / / __|
 i    | |  | | (_| | (__|   <  __/ |    | |\  |  __/\ V  V /\__ \
 i    |_|  |_|\__,_|\___|_|\_\___|_|    |_| \_|\___| \_/\_/ |___/
-i
+i 
 i              - The Underground Hacker News Archive
 i                         (updated hourly)
-i
-i
+i 
+i 
 iStatus:
 =echo "    your ip address: $REMOTE_ADDR"
 =echo "    server time....: `date`"
@@ -16,8 +16,8 @@ iStatus:
 =echo "    server version.: $SERVER_VERSION \"$SERVER_CODENAME\""
 =echo "    server platform: $SERVER_ARCH"
 =echo "    description....: $SERVER_DESCRIPTION"
-i
-i
+i 
+i 
 i                       About this gopher
 i________________________________________________________________
 iThis is a mirror of the popular tech news aggregator Hacker News
@@ -25,18 +25,18 @@ i(https://news.ycombinator.com). All stories and discussions have
 ibeen converted to plain-text ASCII files. You can get started by
 iviewing the live feed, or you can search the archive for a story
 i________________________________________________________________
-i
+i 
 =echo "1Live Feed (last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)	/live/p1/"
 1Archive	/archive
 7Search	/query
-i
-i
+i 
+i 
 0Contact	/contact
-i
+i 
 i-- External Links --
 hHacker News (news.ycombinator.com) 	URL:http://news.ycombinator.com
 hThis project's source	URL://http://github.com/michael-lazar/hn-gopher
-i
+i  
 i-- Gopher Resources --
 1gophernicus	/	gophernicus.org	70
 1gopherspace index	/	gopher.floodgap.com	70

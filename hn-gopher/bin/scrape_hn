@@ -41,7 +41,7 @@ def setup_log(filename):
 
 
 def sanitize(text):
-    # 7-bit ASCII is good enough for 1991
+    # 7-bit ASCII was good enough for 1991, so it's good enough for me
     return ''.join([i if ord(i) < 128 else '?' for i in text])
 
 
@@ -90,34 +90,36 @@ story_gen, index = story_generator(data), 0
 for page in range(1, args.page_count + 1):
     _logger.info('Fetching stories on page %s', page)
 
-    buffer = [
+    # Some gopher browsers (notably the iphone app) don't display an empty
+    # comment line unless it contains at least one character, so add a space.
+    out = [
         'i[Y] Hacker News (LIVE) - page {0} of {1}'.format(page, args.page_count),
-        'i',
+        'i ',
         '1(home)\t/']
 
     if page != 1:
-        buffer.extend(['1(previous page)\t/live/p{0}'.format(page - 1)])
+        out.extend(['1(previous page)\t/live/p{0}'.format(page - 1)])
 
     for story in islice(story_gen, args.page_size):
         index += 1
-        buffer.append('i')
+        out.append('i ')
 
         # Title and URL
         title = '{0}. {1}'.format(index, sanitize(story['title']))
         lines = text_wrapper.wrap(title)
         if story.get('url'):
             url = sanitize(story['url'])
-            buffer.extend(['h{0}\tURL:{1}'.format(l, url) for l in lines])
+            out.extend(['h{0}\tURL:{1}'.format(l, url) for l in lines])
         else:
             url = '/items/{0}'.format(story['id'])
-            buffer.extend(['1{0}\t{1}'.format(l, url) for l in lines])
+            out.extend(['1{0}\t{1}'.format(l, url) for l in lines])
 
         # Additional info
         if story['type'] == 'job':
             info = 'i{0} points {1}'.format(
                 story['score'],
                 humanize_timestamp(story['time']))
-            buffer.extend([info])
+            out.extend([info])
         else:
             info = 'i{0} points by {1} {2} | {3} comments'.format(
                 story['score'],
@@ -125,10 +127,10 @@ for page in range(1, args.page_count + 1):
                 humanize_timestamp(story['time']),
                 story['descendants'])
             comments = '1View comments\t/items/{0}'.format(story['id'])
-            buffer.extend([info, comments])
+            out.extend([info, comments])
 
     if page != args.page_count:
-        buffer.extend(['i', '1(next page)\t/live/p{0}'.format(page + 1)])
+        out.extend(['i ', '1(next page)\t/live/p{0}'.format(page + 1)])
 
     page_dir = '{0}/live/p{1}'.format(args.data_dir, page)
     os.makedirs(page_dir, exist_ok=True)
@@ -136,6 +138,6 @@ for page in range(1, args.page_count + 1):
     gophermap = page_dir + '/gophermap'
     _logger.info('Generating gophermap %s', gophermap)
     with io.open(gophermap, 'w+', encoding='ascii', errors='replace') as fp:
-        fp.writelines('{0}\n'.format(line) for line in buffer)
+        fp.writelines('{0}\n'.format(line) for line in out)
 
 _logger.info('Finished!')
