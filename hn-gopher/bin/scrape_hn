@@ -10,18 +10,21 @@ from datetime import datetime
 from logging.handlers import RotatingFileHandler
 
 import requests
+from lxml import html
 
 
 HN_URL = 'https://hacker-news.firebaseio.com/v0/'
 HN_SEARCH_URL = 'https://hn.algolia.com/api/v1/'
 
-_parser = argparse.ArgumentParser()
-_parser.add_argument('--log-file')
-_parser.add_argument('--data-dir', default='/var/gopher')
-_parser.add_argument('--page-size', default=10)
-_parser.add_argument('--page-count', default=10)
-_parser.add_argument('--line-width', default=67)
-args = _parser.parse_args()
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--log-file')
+    parser.add_argument('--data-dir', default='/var/gopher')
+    parser.add_argument('--page-size', default=10)
+    parser.add_argument('--page-count', default=10)
+    parser.add_argument('--line-width', default=67)
+    return parser.parse_args()
 
 
 def setup_log(filename):
@@ -76,68 +79,148 @@ def story_generator(stories):
             yield data
 
 
-_logger = setup_log(args.log_file)
-
-text_wrapper = textwrap.TextWrapper(args.line_width)
-
-_logger.info('Fetching top story IDs')
-session = requests.session()
-resp = session.get('{0}{1}.json'.format(HN_URL, 'topstories'))
-resp.raise_for_status()
-data = resp.json()
-
-story_gen, index = story_generator(data), 0
-for page in range(1, args.page_count + 1):
-    _logger.info('Fetching stories on page %s', page)
-
-    # Some gopher browsers (notably the iphone app) don't display an empty
-    # comment line unless it contains at least one character, so add a space.
-    out = [
-        'i[Y] Hacker News (LIVE) - page {0} of {1}'.format(page, args.page_count),
-        'i ',
-        '1(home)\t/']
-
-    if page != 1:
-        out.extend(['1(previous page)\t/live/p{0}'.format(page - 1)])
-
-    for story in islice(story_gen, args.page_size):
-        index += 1
-        out.append('i ')
-
-        # Title and URL
-        title = '{0}. {1}'.format(index, sanitize(story['title']))
-        lines = text_wrapper.wrap(title)
-        if story.get('url'):
-            url = sanitize(story['url'])
-            out.extend(['h{0}\tURL:{1}'.format(l, url) for l in lines])
-        else:
-            url = '/items/{0}'.format(story['id'])
-            out.extend(['1{0}\t{1}'.format(l, url) for l in lines])
-
-        # Additional info
-        if story['type'] == 'job':
-            info = 'i{0} points {1}'.format(
-                story['score'],
-                humanize_timestamp(story['time']))
-            out.extend([info])
-        else:
-            info = 'i{0} points by {1} {2} | {3} comments'.format(
-                story['score'],
-                sanitize(story['by']),
-                humanize_timestamp(story['time']),
-                story['descendants'])
-            comments = '1View comments\t/items/{0}'.format(story['id'])
-            out.extend([info, comments])
-
-    if page != args.page_count:
-        out.extend(['i ', '1(next page)\t/live/p{0}'.format(page + 1)])
-
-    page_dir = '{0}/live/p{1}'.format(args.data_dir, page)
-    os.makedirs(page_dir, exist_ok=True)
-
-    gophermap = page_dir + '/gophermap'
+def write_gophermap(directory, lines):
+    os.makedirs(directory, exist_ok=True)
+    gophermap = directory + '/gophermap'
     _logger.info('Generating gophermap %s', gophermap)
     with io.open(gophermap, 'w+', encoding='ascii', errors='replace') as fp:
-        fp.writelines('{0}\n'.format(line) for line in out)
+        fp.writelines('{0}\n'.format(line) for line in lines)
 
+
+def update_story_file(story):
+
+    _logger.info('Fetching comments for %s', story['id'])
+    resp = session.get('{0}/items/{1}'.format(HN_SEARCH_URL, story['id']))
+    resp.raise_for_status()
+    data = resp.json()
+
+    out = [
+        'i[Y] Hacker News (Story %s)' % story['id'],
+        'i ',
+        'i' + text_repeater('_')]
+    title = sanitize(story['title'])
+    out.extend('i{0}'.format(l) for l in text_wrapper.wrap(title))
+
+    if story.get('url'):
+        url = sanitize(story['url'])
+        out.append('h{0}\tURL:{0}'.format(url))
+
+    info = 'i{0} points by {1}'.format(
+        story['score'], sanitize(story['by']))
+    out.append(info)
+
+    out.extend([
+        'i' + text_repeater('_'),
+        'i '])
+
+    for child in data['children']:
+        append_comment(child, out, level=0)
+
+    item_dir = '{0}/items/{1}'.format(args.data_dir, story['id'])
+    write_gophermap(item_dir, out)
+
+
+def append_comment(comment, out, level=0):
+    indent = 'i' + min(level, 5) * 2 * ' '
+
+    if 'author' in comment:
+        info = indent + '{0} {1}'.format(
+            sanitize(comment['author']),
+            humanize_timestamp(comment['created_at_i']))
+        out.append(info)
+
+        # The text field contains HTML markup like <p> and <a>,
+        # as well as HTML escaped characters.
+        doc = html.fromstring(comment['text'])
+        text = doc.text_content()
+
+        wrapper = textwrap.TextWrapper(
+            initial_indent=indent,
+            subsequent_indent=indent,
+            width=args.line_width + 1)  # +1 for the prepended "i"
+        text_lines = wrapper.wrap(text)
+
+        out.extend(text_lines)
+    else:
+        out.append(indent + '[deleted]')
+
+    out.append('i ')
+
+    for child in comment['children']:
+        append_comment(child, out, level=level + 1)
+
+
+def update_live_feed():
+
+    _logger.info('Fetching top story IDs')
+    resp = session.get('{0}{1}.json'.format(HN_URL, 'topstories'))
+    resp.raise_for_status()
+    data = resp.json()
+
+    story_gen = story_generator(data)
+    story_ids = []
+    for page in range(1, args.page_count + 1):
+        _logger.info('Fetching stories on page %s', page)
+
+        # Some gopher browsers (notably the iphone app) don't display an empty
+        # comment line unless it contains at least one character, so add a space.
+        out = [
+            'i[Y] Hacker News (LIVE) - page {0} of {1}'.format(page, args.page_count),
+            'i ',
+            '1(home)\t/']
+
+        if page != 1:
+            out.extend(['1(previous page)\t/live/p{0}'.format(page - 1)])
+
+        for story in islice(story_gen, args.page_size):
+            story_ids.append(story['id'])
+            out.append('i ')
+
+            # Title and URL
+            title = '{0}. {1}'.format(len(story_ids), sanitize(story['title']))
+            lines = text_wrapper.wrap(title)
+            if story.get('url'):
+                url = sanitize(story['url'])
+                out.extend(['h{0}\tURL:{1}'.format(l, url) for l in lines])
+            else:
+                url = '/items/{0}'.format(story['id'])
+                out.extend(['1{0}\t{1}'.format(l, url) for l in lines])
+
+            # Additional info
+            if story['type'] == 'job':
+                info = 'i{0} points {1}'.format(
+                    story['score'],
+                    humanize_timestamp(story['time']))
+                out.extend([info])
+            else:
+                info = 'i{0} points by {1} {2} | {3} comments'.format(
+                    story['score'],
+                    sanitize(story['by']),
+                    humanize_timestamp(story['time']),
+                    story['descendants'])
+                comments = '1View comments\t/items/{0}'.format(story['id'])
+                out.extend([info, comments])
+
+            # Update the story's comment file
+            update_story_file(story)
+
+        if page != args.page_count:
+            out.extend(['i ', '1(next page)\t/live/p{0}'.format(page + 1)])
+
+        page_dir = '{0}/live/p{1}'.format(args.data_dir, page)
+        write_gophermap(page_dir, out)
+
+
+##############################################################################
+# Main
+##############################################################################
+args = parse_args()
+
+text_wrapper = textwrap.TextWrapper(args.line_width)
+text_repeater = lambda char: char * args.line_width
+
+session = requests.session()
+_logger = setup_log(args.log_file)
+
+update_live_feed()
 _logger.info('Finished!')

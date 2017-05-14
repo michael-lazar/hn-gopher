@@ -1,6 +1,6 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-apt-get install -y python3 python-requests
+apt-get install -y python3 python3-requests python3-lxml
 apt-get instal -y libwrap0-dev
 cp -R $DIR/hn-gopher/opt/gophernicus_* /opt/
 
@@ -17,5 +17,3 @@ cp -R $DIR/hn-gopher/etc/cron.d/* /etc/cron.d/
 
 rm /etc/default/gophernicus
 cp $DIR/hn-gopher/opt/gophernicus_*/gophernicus.env /etc/default/gophernicus
-
-/usr/local/bin/scrape_hn

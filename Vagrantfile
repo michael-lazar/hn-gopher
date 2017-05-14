@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
     # Setup the system
     timedatectl set-timezone UTC
     apt-get install -y curl lynx vim
-    apt-get install -y python3 python3-requests
+    apt-get install -y python3 python3-requests python3-lxml
 
     # Install build dependencies
     apt-get install -y libwrap0-dev

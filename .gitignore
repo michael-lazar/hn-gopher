@@ -1,3 +1,6 @@
 .vagrant
 .idea
 *.o
+
+hn-gopher/var/gopher/items/*
+hn-gopher/var/gopher/live/*
