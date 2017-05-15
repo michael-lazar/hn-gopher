@@ -1,6 +1,6 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-apt-get install -y python3 python3-requests python3-lxml
+apt-get install -y python3 python3-requests python3-lxml python3-unidecode
 apt-get instal -y libwrap0-dev
 cp -R $DIR/hn-gopher/opt/gophernicus_* /opt/
 

@@ -2,18 +2,23 @@
 
 import os
 import io
+import json
+import shutil
 import logging
 import argparse
 import textwrap
+import tempfile
 from itertools import islice
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 
 import requests
 from lxml import html
-
+from unidecode import unidecode
 
 HN_URL = 'https://hacker-news.firebaseio.com/v0/'
+# This API is nice because it can return all comments for a story with a
+# single HTTP call
 HN_SEARCH_URL = 'https://hn.algolia.com/api/v1/'
 
 
@@ -45,7 +50,8 @@ def setup_log(filename):
 
 def sanitize(text):
     # 7-bit ASCII was good enough for 1991, so it's good enough for me
-    return ''.join([i if ord(i) < 128 else '?' for i in text])
+    # This package helps convert things like smart quotes to plain ascii
+    return unidecode(text)
 
 
 def humanize_timestamp(timestamp):
@@ -82,20 +88,26 @@ def story_generator(stories):
 def write_gophermap(directory, lines):
     os.makedirs(directory, exist_ok=True)
     gophermap = directory + '/gophermap'
-    _logger.info('Generating gophermap %s', gophermap)
     with io.open(gophermap, 'w+', encoding='ascii', errors='replace') as fp:
         fp.writelines('{0}\n'.format(line) for line in lines)
 
 
-def update_story_file(story):
+def dump_raw_story(directory, data):
+    os.makedirs(directory, exist_ok=True)
+    filename = directory + '/{0}.json'.format(data['id'])
+    with io.open(filename, 'w', encoding='utf-8') as fp:
+        json.dump(data, fp)
 
-    _logger.info('Fetching comments for %s', story['id'])
+
+def update_story_file(story, page):
+
     resp = session.get('{0}/items/{1}'.format(HN_SEARCH_URL, story['id']))
     resp.raise_for_status()
     data = resp.json()
 
     out = [
-        'i[Y] Hacker News (Story %s)' % story['id'],
+        'i[Y] Hacker News - Item %s' % story['id'],
+        '1(back)\t/live/p{0}'.format(page),
         'i ',
         'i' + text_repeater('_')]
     title = sanitize(story['title'])
@@ -111,13 +123,15 @@ def update_story_file(story):
 
     out.extend([
         'i' + text_repeater('_'),
+        '0Download Source\t/live/items/{0}/{0}.json'.format(data['id']),
         'i '])
 
     for child in data['children']:
         append_comment(child, out, level=0)
 
-    item_dir = '{0}/items/{1}'.format(args.data_dir, story['id'])
+    item_dir = '{0}/items/{1}'.format(tmp_dir, story['id'])
     write_gophermap(item_dir, out)
+    dump_raw_story(item_dir, data)
 
 
 def append_comment(comment, out, level=0):
@@ -152,7 +166,7 @@ def append_comment(comment, out, level=0):
 
 def update_live_feed():
 
-    _logger.info('Fetching top story IDs')
+    _logger.info('Fetching list of top stories')
     resp = session.get('{0}{1}.json'.format(HN_URL, 'topstories'))
     resp.raise_for_status()
     data = resp.json()
@@ -160,7 +174,7 @@ def update_live_feed():
     story_gen = story_generator(data)
     story_ids = []
     for page in range(1, args.page_count + 1):
-        _logger.info('Fetching stories on page %s', page)
+        _logger.info('Building page %s', page)
 
         # Some gopher browsers (notably the iphone app) don't display an empty
         # comment line unless it contains at least one character, so add a space.
@@ -198,16 +212,16 @@ def update_live_feed():
                     sanitize(story['by']),
                     humanize_timestamp(story['time']),
                     story['descendants'])
-                comments = '1View comments\t/items/{0}'.format(story['id'])
+                comments = '1View comments\t/live/items/{0}'.format(story['id'])
                 out.extend([info, comments])
 
             # Update the story's comment file
-            update_story_file(story)
+            update_story_file(story, page)
 
         if page != args.page_count:
             out.extend(['i ', '1(next page)\t/live/p{0}'.format(page + 1)])
 
-        page_dir = '{0}/live/p{1}'.format(args.data_dir, page)
+        page_dir = '{0}/p{1}'.format(tmp_dir, page)
         write_gophermap(page_dir, out)
 
 
@@ -222,5 +236,17 @@ text_repeater = lambda char: char * args.line_width
 session = requests.session()
 _logger = setup_log(args.log_file)
 
-update_live_feed()
+# Stage everything in a temporary directory
+with tempfile.TemporaryDirectory() as tmp_dir:
+    _logger.info('Setting up staging directory %s', tmp_dir)
+    update_live_feed()
+
+    live_dir = args.data_dir + '/live'
+
+    _logger.info('Clearing existing stories in %s', live_dir)
+    shutil.rmtree(live_dir, ignore_errors=True)
+
+    _logger.info('Copying staging directory to  %s', live_dir)
+    shutil.copytree(tmp_dir, live_dir)
+
 _logger.info('Finished!')
