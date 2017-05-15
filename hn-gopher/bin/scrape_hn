@@ -239,14 +239,16 @@ _logger = setup_log(args.log_file)
 # Stage everything in a temporary directory
 with tempfile.TemporaryDirectory() as tmp_dir:
     _logger.info('Setting up staging directory %s', tmp_dir)
+    os.chmod(tmp_dir, 0o644)
+
     update_live_feed()
 
     live_dir = args.data_dir + '/live'
 
-    _logger.info('Clearing existing stories in %s', live_dir)
+    _logger.info('Clearing existing stories')
     shutil.rmtree(live_dir, ignore_errors=True)
 
-    _logger.info('Copying staging directory to  %s', live_dir)
+    _logger.info('Copying staging directory to %s', live_dir)
     shutil.copytree(tmp_dir, live_dir)
 
 _logger.info('Finished!')
