@@ -239,7 +239,7 @@ _logger = setup_log(args.log_file)
 # Stage everything in a temporary directory
 with tempfile.TemporaryDirectory() as tmp_dir:
     _logger.info('Setting up staging directory %s', tmp_dir)
-    os.chmod(tmp_dir, 0o644)
+    os.chmod(tmp_dir, 0o755)
 
     update_live_feed()
 
