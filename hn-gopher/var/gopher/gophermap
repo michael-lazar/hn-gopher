@@ -28,7 +28,7 @@ i________________________________________________________________
 i 
 =echo "1Live Feed (last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)	/live/p1/"
 1Archive (under construction)	/archive
-7Search (under construction)	/query
+7Search (under construction)	/query.q
 i 
 i-- Information --
 0Contact	/contact
