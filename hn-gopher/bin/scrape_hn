@@ -197,7 +197,7 @@ def update_live_feed():
                 url = sanitize(story['url'])
                 out.extend(['h{0}\tURL:{1}'.format(l, url) for l in lines])
             else:
-                url = '/items/{0}'.format(story['id'])
+                url = '/live/items/{0}'.format(story['id'])
                 out.extend(['1{0}\t{1}'.format(l, url) for l in lines])
 
             # Additional info
