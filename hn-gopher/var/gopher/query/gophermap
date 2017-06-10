@@ -1,4 +1,4 @@
-1(home) /live/p1
+1(home) /
 i
 =echo "iResults for query: $QUERY_STRING"
 i
