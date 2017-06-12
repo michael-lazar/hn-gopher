@@ -10,7 +10,9 @@ make install
 make clean
 popd
 
-rm -rf /var/gopher
+# Don't want to delete the archive/live folders
+# rm -rf /var/gopher
+
 cp -R $DIR/hn-gopher/var/gopher /var/gopher
 cp -R $DIR/hn-gopher/bin/* /usr/local/bin/
 cp -R $DIR/hn-gopher/etc/cron.d/* /etc/cron.d/
