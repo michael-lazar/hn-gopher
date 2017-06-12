@@ -123,8 +123,9 @@ def update_story_file(story, page):
     out.append(info)
 
     out.extend([
-        'i' + text_repeater('_'),
+        'i ',
         '0Download Source\t/live/items/{0}/{0}.json'.format(data['id']),
+        'i' + text_repeater('_'),
         'i '])
 
     for child in data['children']:
