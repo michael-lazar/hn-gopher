@@ -61,8 +61,8 @@ with tempfile.TemporaryDirectory() as tmp_dir:
     shutil.copytree(live_dir, tmp_archive_dir)
 
     patterns = [
-        's|^i\[Y\] Hacker News (LIVE)|i\[Y\]Hacker News ({:%Y-%m-%d})|g',
-        's|^i\[Y\] Hacker News -|i\[Y\]Hacker News ({:%Y-%m-%d}) -|g',
+        's|^i\[Y\] Hacker News (LIVE)|i\[Y\] Hacker News ({:%Y-%m-%d})|g',
+        's|^i\[Y\] Hacker News -|i\[Y\] Hacker News ({:%Y-%m-%d}) -|g',
         's|	/live/|	/archive/{0:%Y}/{0:%Y-%m-%d}/|g',
         's|	/$|	/archive/{0:%Y}|g']
 
