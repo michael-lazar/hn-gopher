@@ -1,5 +1,5 @@
 .vagrant
 .idea
 *.o
-
 hn-gopher/var/gopher/live/*
+hn-gopher/var/gopher/archive/2017

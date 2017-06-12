@@ -107,6 +107,7 @@ def update_story_file(story, page):
 
     out = [
         'i[Y] Hacker News - Item %s' % story['id'],
+        'i ',
         '1(back)\t/live/p{0}'.format(page),
         'i ',
         'i' + text_repeater('_')]

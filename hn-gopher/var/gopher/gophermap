@@ -27,9 +27,8 @@ iviewing the live feed, or you can search the archive for a story
 i________________________________________________________________
 i 
 =echo "1Live Feed (last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)	/live/p1/"
-1Archive (under construction)	/archive
-7Search (under construction)	/query
-i 
+1Archive	/archive
+i
 i-- Information --
 0Contact	/contact
 hGithub	URL://http://github.com/michael-lazar/hn-gopher
