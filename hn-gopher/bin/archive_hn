@@ -89,11 +89,7 @@ if update_gophermap:
         if not gophermap_exists:
             _logger.info('Generating header for %s', gophermap)
             fp.writelines([
-                'i                       HNgopher Archive                       \n'
-                'i______________________________________________________________\n'
-                'iThis directory contains historical snapshots of the stories on\n'
-                'ithe /live page.  New entries are added daily at midnight (EST)\n'
-                'i______________________________________________________________\n'
+                'iHNgopher Archive ({:%Y})\n'.format(now),
                 'i \n',
                 '1..	/archive\n'])
         _logger.info('Appending a link to p1 to the gophermap')
