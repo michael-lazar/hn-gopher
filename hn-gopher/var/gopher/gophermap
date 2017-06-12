@@ -30,12 +30,12 @@ i
 1Archive	/archive
 i
 i-- Information --
-0Contact	/contact
-hGithub	URL://http://github.com/michael-lazar/hn-gopher
+0About	/about
+hSource Code (WWW)	URL://http://github.com/michael-lazar/hn-gopher
 i 
 i-- External Links --
-hHacker News (news.ycombinator.com) 	URL:http://news.ycombinator.com
+hHacker News (WWW) 	URL:http://news.ycombinator.com
 i 
 i-- Gopher Resources --
-1gophernicus	/	gophernicus.org	70
-1gopherspace index	/	gopher.floodgap.com	70
+1Gopherspace Index	/	gopher.floodgap.com	70
+1Gophernicus Server	/	gophernicus.org	70
