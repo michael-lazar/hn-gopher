@@ -15,7 +15,7 @@ Unfortunately, the gopher protocol hasn't been supported by major web browsers s
 
 <img src="resources/overbite_screen.png" height="700">
    
-- If you're lazy, Floodgap has setup a gateway that converts *gopher* to *http* so it
+- As a last resort, Floodgap has setup a gateway that converts *gopher* to *http* so it
    can be viewed from any browser.
    - http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com
 
