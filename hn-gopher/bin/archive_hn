@@ -61,10 +61,8 @@ with tempfile.TemporaryDirectory() as tmp_dir:
     shutil.copytree(live_dir, tmp_archive_dir)
 
     patterns = [
-        's|^i\[Y\] Hacker News (LIVE)|i\[Y\] Hacker News ({:%Y-%m-%d})|g',
-        's|^i\[Y\] Hacker News -|i\[Y\] Hacker News ({:%Y-%m-%d}) -|g',
-        's|	/live/|	/archive/{0:%Y}/{0:%Y-%m-%d}/|g',
-        's|	/$|	/archive/{0:%Y}|g']
+        's|^1HN Gopher Live Feed|1HN Gopher Feed ({:%Y-%m-%d})|g',
+        's|	/live/|	/archive/{0:%Y}/{0:%Y-%m-%d}/|g']
 
     for pattern in patterns:
         find_cmd = 'find {} -name gophermap -type f -print0'.format(tmp_archive_dir)
@@ -89,10 +87,13 @@ if update_gophermap:
         if not gophermap_exists:
             _logger.info('Generating header for %s', gophermap)
             fp.writelines([
-                'iHNgopher Archive ({:%Y})\n'.format(now),
+                '1HN Gopher Home Page\t/\n'.format(now),
                 'i \n',
-                '1..	/archive\n'])
+                'iThis directory contains historical snapshots of the stories on\n',
+                'ithe /live page. New entries are added daily at midnight (EST).\n',
+                'i \n',
+                '1..\t/archive\n'])
         _logger.info('Appending a link to p1 to the gophermap')
-        fp.write('1{0:%Y-%m-%d}	/archive/{0:%Y}/{0:%Y-%m-%d}/p1\n'.format(now))
+        fp.write('1HN Gopher Feed ({0:%Y-%m-%d})	/archive/{0:%Y}/{0:%Y-%m-%d}/p1\n'.format(now))
 
 _logger.info('Finished!')

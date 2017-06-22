@@ -106,25 +106,26 @@ def update_story_file(story, page):
     data = resp.json()
 
     out = [
-        'i[Y] Hacker News - Item %s' % story['id'],
-        'i ',
-        '1(back)\t/live/p{0}'.format(page),
+        '1HN Gopher Live Feed - page {0} of {1}\t/live/p{0}'.format(page, args.page_count),
         'i ',
         'i' + text_repeater('_')]
+
     title = sanitize(story['title'])
     out.extend('i{0}'.format(l) for l in text_wrapper.wrap(title))
-
-    if story.get('url'):
-        url = sanitize(story['url'])
-        out.append('h{0}\tURL:{0}'.format(url))
-
-    info = 'i{0} points by {1}'.format(
-        story['score'], sanitize(story['by']))
+    info = 'i{0} points by {1}'.format(story['score'], sanitize(story['by']))
     out.append(info)
 
+    if story.get('url'):
+        safe_url = text_chop(sanitize(story['url']))
+        out.append('h{0}\tURL:{1}'.format(safe_url, story['url']))
+    else:
+        # Strip out HTML tags
+        doc = html.fromstring(story['text'])
+        text = sanitize(doc.text_content())
+        out.append('i ')
+        out.extend(['i' + l for l in text_wrapper.wrap(text)])
+
     out.extend([
-        'i ',
-        '0Download Source\t/live/items/{0}/{0}.json'.format(data['id']),
         'i' + text_repeater('_'),
         'i '])
 
@@ -140,7 +141,7 @@ def append_comment(comment, out, level=0):
     indent = 'i' + min(level, 5) * 2 * ' '
 
     if 'author' in comment:
-        info = indent + '{0} {1}'.format(
+        info = indent + '{0} - {1}'.format(
             sanitize(comment['author']),
             humanize_timestamp(comment['created_at_i']))
         out.append(info)
@@ -180,48 +181,56 @@ def update_live_feed():
 
         # Some gopher browsers (notably the iphone app) don't display an empty
         # comment line unless it contains at least one character, so add a space.
-        out = [
-            'i[Y] Hacker News (LIVE) - page {0} of {1}'.format(page, args.page_count),
-            'i ',
-            '1(home)\t/']
+        out = ['1HN Gopher Home Page\t/'.format(page)]
 
         if page != 1:
-            out.extend(['1(previous page)\t/live/p{0}'.format(page - 1)])
+            out.extend([
+                'i ',
+                'i(previous)',
+                '1HN Gopher Live Feed - page {0} of {1}\t/live/p{0}'.format(page - 1, args.page_count)])
 
         for story in islice(story_gen, args.page_size):
             story_ids.append(story['id'])
             out.append('i ')
 
             # Title and URL
-            title = '{0}. {1}'.format(len(story_ids), sanitize(story['title']))
-            lines = text_wrapper.wrap(title)
-            if story.get('url'):
-                url = sanitize(story['url'])
-                out.extend(['h{0}\tURL:{1}'.format(l, url) for l in lines])
-            else:
-                url = '/live/items/{0}'.format(story['id'])
-                out.extend(['1{0}\t{1}'.format(l, url) for l in lines])
+            title = sanitize(story['title'])[:args.line_width]
+            out.append('i{0}'.format(title))
 
             # Additional info
             if story['type'] == 'job':
                 info = 'i{0} points {1}'.format(
                     story['score'],
                     humanize_timestamp(story['time']))
-                out.extend([info])
             else:
-                info = 'i{0} points by {1} {2} | {3} comments'.format(
+                info = 'i{0} points by {1} {2}'.format(
                     story['score'],
                     sanitize(story['by']),
-                    humanize_timestamp(story['time']),
-                    story['descendants'])
-                comments = '1View comments\t/live/items/{0}'.format(story['id'])
-                out.extend([info, comments])
+                    humanize_timestamp(story['time']))
+            out.append(info)
+
+            if story.get('url'):
+                clean_url = text_chop(sanitize(story['url']))
+                out.append('h{0}\tURL:{1}'.format(clean_url, story['url']))
+
+            # Link to comments
+            if story['type'] == 'job':
+                comments = 'view listing - {0}'.format(title)
+                link = '1{0}\t/live/items/{1}'.format(comments[:args.line_width], story['id'])
+                out.append(link)
+            else:
+                comments = 'view comments ({0}) - {1}'.format(story['descendants'], title)
+                link = '1{0}\t/live/items/{1}'.format(comments[:args.line_width], story['id'])
+                out.append(link)
 
             # Update the story's comment file
             update_story_file(story, page)
 
         if page != args.page_count:
-            out.extend(['i ', '1(next page)\t/live/p{0}'.format(page + 1)])
+            out.extend([
+                'i ',
+                'i(more)',
+                '1HN Gopher Live Feed - page {0} of {1}\t/live/p{0}'.format(page + 1, args.page_count)])
 
         page_dir = '{0}/p{1}'.format(tmp_dir, page)
         write_gophermap(page_dir, out)
@@ -234,6 +243,13 @@ args = parse_args()
 
 text_wrapper = textwrap.TextWrapper(args.line_width)
 text_repeater = lambda char: char * args.line_width
+
+
+def text_chop(text):
+    if len(text) > args.line_width:
+        return text[:args.line_width - 3] + '...'
+    return text
+
 
 session = requests.session()
 _logger = setup_log(args.log_file)

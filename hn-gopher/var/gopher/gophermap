@@ -4,39 +4,60 @@ i    | |__| | __ _  ___| | _____ _ __  |  \| | _____      _____
 i    |  __  |/ _` |/ __| |/ / _ \ '__| | . ` |/ _ \ \ /\ / / __|
 i    | |  | | (_| | (__|   <  __/ |    | |\  |  __/\ V  V /\__ \
 i    |_|  |_|\__,_|\___|_|\_\___|_|    |_| \_|\___| \_/\_/ |___/
-i 
-i              - The Underground Hacker News Mirror
-i                         (updated hourly)
-i 
-i 
+i
+i          - Gopher's "Underground" Hacker News Mirror
+i                        (updated hourly)
+i
+i                               _________________
+i                              |\                \
+i                              | \                \
+i                 _     _      |\ \________________\
+i                (>\---/<)     |\\ |      ____     |
+i                ,'     `.     |.\ |     |\   \    |
+i               /  q   p  \    |   |     |.\   \___|____
+i              (  >(_Y_)<  )    \  |     ||\\   \       \
+i               >-' `-' `-<-.    \ |     || \\___\       \
+i              /  _.,,  ,,,- \    \|_____||  ||  !\_______\
+i             /,    )`  '(    )   ______ ||  ||  !  . . . |
+i            ; `._.'      `--<    \000  \~\\ ||  !   . .  |
+i           :     \        |  )    \000 9\ \\||  !    .   |
+i           \      )       ;_/      \000 9\ \.|  !        |
+i            `._ _/_  ___.'-'''      \000 9\ \|__!________/
+i               `--'''                ^^^^^`` \/_____\
+i
+i
 iStatus:
-=echo "    your ip address: $REMOTE_ADDR"
 =echo "    server time....: `date`"
 =echo "    server uptime..: `uptime | sed 's/.*up *\([^,]*\), .*/\1/'`"
 =echo "    server version.: $SERVER_VERSION \"$SERVER_CODENAME\""
 =echo "    server platform: $SERVER_ARCH"
 =echo "    description....: $SERVER_DESCRIPTION"
-i 
-i 
-i                       About this gopher
+i
+i
+i                        About this page
 i________________________________________________________________
 iThis is a mirror of the popular tech news aggregator Hacker News
 i(https://news.ycombinator.com). All stories and discussions have
 ibeen converted to plain-text ASCII files. You can get started by
-iviewing the live feed, or you can search the archive for a story
+iviewing the live feed, or you can search the archive for a date.
 i________________________________________________________________
-i 
+i
+i-- Feeds --
 =echo "1Live Feed (last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)	/live/p1/"
 1Archive	/archive
 i
 i-- Information --
-0About	/about
+0Contact	/about
 hSource Code (WWW)	URL://http://github.com/michael-lazar/hn-gopher
 i 
 i-- External Links --
 hHacker News (WWW) 	URL:http://news.ycombinator.com
 i 
 i-- Gopher Resources --
-1Gopherhole Index	/	gopher.floodgap.com	70
-1XKCD Comics	/fun/xkcd	gopher.floodgap.com	70
-1Gophernicus	/	gophernicus.org	70
+1Floodgap Systems	/	gopher.floodgap.com	70
+1Search Gopherspace with Veronica-2	/v2	gopher.floodgap.com	70
+1xkcd - A webcomic of Romance, Sarcasm, Math and Languages	/fun/xkcd	gopher.floodgap.com	70
+1Gophernicus - a modern full-featured gopher server	/	gophernicus.org	70
+i
+=echo "We're not counting, but you're visitor number `/usr/local/bin/counter.sh`"
+i________________________________________________________________
