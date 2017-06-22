@@ -2,7 +2,7 @@
 
 **gopher://hngopher.com** (see below for "How to view this site")
 
-HN Gopher is a read-only mirror for https://news.ycombinator.com/ (a.k.a. Hacker News) served using the [gopher protocol](https://en.wikipedia.org/wiki/Gopher_(protocol)). This project was created for my own enjoyment, and to learn about gopher and the history of the internet before the world wide web.
+HN Gopher is a read-only mirror for https://news.ycombinator.com/ served using the [gopher protocol](https://en.wikipedia.org/wiki/Gopher_(protocol)). This project was created for my own enjoyment, and to learn about gopher and the history of the internet before the world wide web.
 
 *This is not endorsed by or affiliated with the Y Combinator company*
 
