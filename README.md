@@ -4,7 +4,9 @@ HN Gopher is a read-only mirror for https://news.ycombinator.com/ (a.k.a. Hacker
 
 * **gopher://hngopher.com** (see the section on "How to view this site")
 
-This project was created for my own enjoyment, and to learn about gopher and the history of the internet before the world wide web. It is not endorsed by or affiliated with the Y Combinator company.
+This project was created for my own enjoyment, and to learn about gopher and the history of the internet before the world wide web.
+
+*This is not endorsed by or affiliated with the Y Combinator company*
 
 ## How to view this site
 
