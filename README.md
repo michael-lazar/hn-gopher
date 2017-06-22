@@ -45,5 +45,5 @@ $ sudo ./deploy
 
 AGPLv3
 
-*This site has not been endorsed by or affiliated with the Y Combinator company*
+*This is an independent project, and is not affiliated with, maintained, authorized, endorsed or sponsored by the Y Combinator company.*
 
