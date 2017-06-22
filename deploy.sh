@@ -17,3 +17,5 @@ popd
 
 rm -f /etc/default/gophernicus
 cp $DIR/hn-gopher/opt/gophernicus_*/gophernicus.env /etc/default/gophernicus
+
+touch /var/tmp/gopher-counter
