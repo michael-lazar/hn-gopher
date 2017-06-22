@@ -118,7 +118,7 @@ def update_story_file(story, page):
     if story.get('url'):
         safe_url = text_chop(sanitize(story['url']))
         out.append('h{0}\tURL:{1}'.format(safe_url, story['url']))
-    else:
+    elif story.get('text'):
         # Strip out HTML tags
         doc = html.fromstring(story['text'])
         text = sanitize(doc.text_content())
