@@ -194,8 +194,11 @@ def update_live_feed():
             out.append('i ')
 
             # Title and URL
-            title = sanitize(story['title'])[:args.line_width]
-            out.append('i{0}'.format(title))
+            title = text_chop(sanitize(story['title']))
+            if story.get('url'):
+                out.append('h{0}\tURL:{1}'.format(title, story['url']))
+            else:
+                out.append('i{0}'.format(title))
 
             # Additional info
             if story['type'] == 'job':
@@ -208,10 +211,6 @@ def update_live_feed():
                     sanitize(story['by']),
                     humanize_timestamp(story['time']))
             out.append(info)
-
-            if story.get('url'):
-                clean_url = text_chop(sanitize(story['url']))
-                out.append('h{0}\tURL:{1}'.format(clean_url, story['url']))
 
             # Link to comments
             if story['type'] == 'job':
