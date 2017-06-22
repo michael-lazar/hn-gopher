@@ -1,4 +1,10 @@
-# hn-gopher
+# HN Gopher
+
+A Hacker News mirror for Gopher 
+
+- **gopher://hngopher.com** (see below for "How to view this site")
+
+HN Gopher is a read-only mirror for https://news.ycombinator.com/ served using the [gopher protocol](https://en.wikipedia.org/wiki/Gopher_(protocol)). This project was created for my own enjoyment, and to learn about gopher and the history of the internet before the world wide web.
 
 ## How to view this site
 
@@ -24,11 +30,20 @@ Unfortunately, the gopher protocol hasn't been supported by major web browsers s
 
 ## How to deploy this project
 
-This server runs on Debian 8.7, but it should work on any Linux system that's capable of building [gophernicus](https://github.com/prologic/gophernicus). There's a ``deploy.sh`` script included in the repo that can be used
-to automatically setup a server listening on port 70 and a cron job that polls the Hacker News API.
+The server currently runs on Debian 8.7, but it should work on any Linux system that's capable of building [gophernicus](https://github.com/prologic/gophernicus). There's a ``deploy.sh`` script included in the repo that can be used
+to automatically setup a server. The server is managed by systemd and listens on port 70 by default. Gopher
+pages are stored as static files in the **/var/gopher** directory. Pages are updated by a couple of cron jobs
+that ping the [Hacker News API](https://hacker-news.firebaseio.com/v0/) and [Algolia HN Search API](https://hn.algolia.com/api/v1/).
 
 ```bash
 $ git clone https://github.com/michael-lazar/hn-gopher.git
 $ cd hn-gopher
 $ sudo ./deploy
 ```
+
+## License
+
+AGPLv3
+
+*This project is not affiliated with, maintained, authorized, endorsed or sponsored by the Y Combinator company.*
+
