@@ -41,18 +41,13 @@ Unfortunately, the gopher protocol hasn't been supported by major web browsers s
    ```bash
    $ lynx gopher://hngopher.com
    ```
-<img src="resources/lynx_screen.png" height="700">
-
+   
 - Install the free [OverbiteFF](https://addons.mozilla.org/en-US/firefox/addon/overbiteff/)
    addon for Firefox
-
-<img src="resources/overbite_screen.png" height="700">
    
 - As a last resort, Floodgap has setup a gateway that converts *gopher* to *http* so it
    can be viewed from any browser.
    - http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com
-
-<img src="resources/floodgap_screen.png" height="700">
 
 
 ## How to deploy this project
