@@ -1,5 +1,34 @@
 # HN Gopher
 
+```
+ 	     _    _            _               _   _
+	    | |  | |          | |             | \ | |  hngopher.com:70
+	    | |__| | __ _  ___| | _____ _ __  |  \| | _____      _____
+	    |  __  |/ _` |/ __| |/ / _ \ '__| | . ` |/ _ \ \ /\ / / __|
+	    | |  | | (_| | (__|   <  __/ |    | |\  |  __/\ V  V /\__ \
+	    |_|  |_|\__,_|\___|_|\_\___|_|    |_| \_|\___| \_/\_/ |___/
+	
+	          - Gopher's "Underground" Hacker News Mirror
+	                        (updated hourly)
+	
+	                               _________________
+	                              |\                \
+	                              | \                \
+	                 _     _      |\ \________________\
+	                (>\---/<)     |\\ |      ____     |
+	                ,'     `.     |.\ |     |\   \    |
+	               /  q   p  \    |   |     |.\   \___|____
+	              (  >(_Y_)<  )    \  |     ||\\   \       \
+	               >-' `-' `-<-.    \ |     || \\___\       \
+	              /  _.,,  ,,,- \    \|_____||  ||  !\_______\
+	             /,    )`  '(    )   ______ ||  ||  !  . . . |
+	            ; `._.'      `--<    \000  \~\\ ||  !   . .  |
+	           :     \        |  )    \000 9\ \\||  !    .   |
+	           \      )       ;_/      \000 9\ \.|  !        |
+	            `._ _/_  ___.'-'''      \000 9\ \|__!________/
+	               `--'''                ^^^^^`` \/_____\
+```
+
 **gopher://hngopher.com** (see below for "How to view this site")
 
 HN Gopher is a read-only mirror for https://news.ycombinator.com/ served using the [gopher protocol](https://en.wikipedia.org/wiki/Gopher_(protocol)). I created this site for my own enjoyment, and to learn about gopher and the history of the internet before the world wide web.
