@@ -57,9 +57,9 @@ Unfortunately, the gopher protocol hasn't been supported by major web browsers s
 
 ## How to deploy this project
 
-The server currently runs on Debian 8.7, but it should work on any Linux system that's capable of building [gophernicus](https://github.com/prologic/gophernicus). There's a ``deploy.sh`` script included in the repo that can be used
-to automatically setup a server. The server is managed by systemd and listens on port 70 by default. Gopher
-pages are stored as static files in the **/var/gopher** directory. Pages are updated by a couple of cron jobs
+The official server runs on Debian 8.7, but it should work on any Linux system that's capable of building [gophernicus](https://github.com/prologic/gophernicus). There's a ``deploy.sh`` script included in the repo that can be used
+to build the server from the repository. The gophernicus service is managed by **systemd** and listens on port 70 by default.
+Gopher pages are stored as static files in the **/var/gopher** directory. Files are continuously updated by cron jobs
 that ping the [Hacker News API](https://hacker-news.firebaseio.com/v0/) and [Algolia HN Search API](https://hn.algolia.com/api/v1/).
 
 ```bash
