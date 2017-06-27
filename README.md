@@ -1,10 +1,41 @@
 # HN Gopher
 
-A Hacker News mirror for Gopher 
+```
+ 	     _    _            _               _   _
+	    | |  | |          | |             | \ | |  hngopher.com:70
+	    | |__| | __ _  ___| | _____ _ __  |  \| | _____      _____
+	    |  __  |/ _` |/ __| |/ / _ \ '__| | . ` |/ _ \ \ /\ / / __|
+	    | |  | | (_| | (__|   <  __/ |    | |\  |  __/\ V  V /\__ \
+	    |_|  |_|\__,_|\___|_|\_\___|_|    |_| \_|\___| \_/\_/ |___/
+	
+	          - Gopher's "Underground" Hacker News Mirror
+	                        (updated hourly)
+	
+	                               _________________
+	                              |\                \
+	                              | \                \
+	                 _     _      |\ \________________\
+	                (>\---/<)     |\\ |      ____     |
+	                ,'     `.     |.\ |     |\   \    |
+	               /  q   p  \    |   |     |.\   \___|____
+	              (  >(_Y_)<  )    \  |     ||\\   \       \
+	               >-' `-' `-<-.    \ |     || \\___\       \
+	              /  _.,,  ,,,- \    \|_____||  ||  !\_______\
+	             /,    )`  '(    )   ______ ||  ||  !  . . . |
+	            ; `._.'      `--<    \000  \~\\ ||  !   . .  |
+	           :     \        |  )    \000 9\ \\||  !    .   |
+	           \      )       ;_/      \000 9\ \.|  !        |
+	            `._ _/_  ___.'-'''      \000 9\ \|__!________/
+	               `--'''                ^^^^^`` \/_____\
+```
 
-- **gopher://hngopher.com** (see below for "How to view this site")
+---
 
-HN Gopher is a read-only mirror for https://news.ycombinator.com/ served using the [gopher protocol](https://en.wikipedia.org/wiki/Gopher_(protocol)). This project was created for my own enjoyment, and to learn about gopher and the history of the internet before the world wide web.
+**gopher://hngopher.com** (see below on "How to view this site")
+
+---
+
+HN Gopher is a read-only mirror for https://news.ycombinator.com/ served using the [gopher protocol](https://en.wikipedia.org/wiki/Gopher_(protocol)). I created this site for my own enjoyment, and to learn about gopher and the history of the internet before the world wide web.
 
 ## How to view this site
 
@@ -14,18 +45,15 @@ Unfortunately, the gopher protocol hasn't been supported by major web browsers s
    ```bash
    $ lynx gopher://hngopher.com
    ```
-<img src="resources/lynx_screen.png" height="700">
-
+   
 - Install the free [OverbiteFF](https://addons.mozilla.org/en-US/firefox/addon/overbiteff/)
    addon for Firefox
-
-<img src="resources/overbite_screen.png" height="700">
    
-- As a last resort, Floodgap has setup a gateway that converts *gopher* to *http* so it
-   can be viewed from any browser.
+- As a last resort, there's a gateway that converts **gopher** sites to **http** so they
+   can be viewed in your browser
    - http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com
-
-<img src="resources/floodgap_screen.png" height="700">
+   
+![screenshot](resources/combined_screens.png)
 
 
 ## How to deploy this project
