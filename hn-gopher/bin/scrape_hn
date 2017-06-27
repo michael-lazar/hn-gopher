@@ -148,8 +148,12 @@ def append_comment(comment, out, level=0):
 
         # The text field contains HTML markup like <p> and <a>,
         # as well as HTML escaped characters.
-        doc = html.fromstring(comment['text'])
-        text = doc.text_content()
+        if comment['text']:
+            doc = html.fromstring(comment['text'])
+            text = doc.text_content()
+        else:
+            # See id 14626305 for an example of a text-less comment
+            text = ''
 
         wrapper = textwrap.TextWrapper(
             initial_indent=indent,
