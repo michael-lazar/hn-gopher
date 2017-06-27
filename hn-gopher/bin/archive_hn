@@ -49,51 +49,57 @@ _logger = setup_log(args.log_file)
 now = datetime.utcnow()
 _logger.info('Building archive for {:%Y-%m-%d}'.format(now))
 
-# Stage everything in a temporary directory
-with tempfile.TemporaryDirectory() as tmp_dir:
-    _logger.info('Setting up staging directory %s', tmp_dir)
-    os.chmod(tmp_dir, 0o755)
+try:
+    # Stage everything in a temporary directory
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        _logger.info('Setting up staging directory %s', tmp_dir)
+        os.chmod(tmp_dir, 0o755)
 
-    live_dir = args.data_dir + '/live'
-    tmp_archive_dir = tmp_dir + '/archive'
+        live_dir = args.data_dir + '/live'
+        tmp_archive_dir = tmp_dir + '/archive'
 
-    _logger.info('Copying %s directory to staging', live_dir)
-    shutil.copytree(live_dir, tmp_archive_dir)
+        _logger.info('Copying %s directory to staging', live_dir)
+        shutil.copytree(live_dir, tmp_archive_dir)
 
-    patterns = [
-        's|^1HN Gopher Live Feed|1HN Gopher Feed ({:%Y-%m-%d})|g',
-        's|	/live/|	/archive/{0:%Y}/{0:%Y-%m-%d}/|g']
+        patterns = [
+            's|^1HN Gopher Live Feed|1HN Gopher Feed ({:%Y-%m-%d})|g',
+            's|	/live/|	/archive/{0:%Y}/{0:%Y-%m-%d}/|g']
 
-    for pattern in patterns:
-        find_cmd = 'find {} -name gophermap -type f -print0'.format(tmp_archive_dir)
-        sed_cmd = 'xargs -0 sed -i "{}"'.format(pattern.format(now))
-        cmd = find_cmd + ' | ' + sed_cmd
-        _logger.info('Issuing command: %s', cmd)
-        subprocess.check_call(cmd, shell=True)
+        for pattern in patterns:
+            find_cmd = 'find {} -name gophermap -type f -print0'.format(tmp_archive_dir)
+            sed_cmd = 'xargs -0 sed -i "{}"'.format(pattern.format(now))
+            cmd = find_cmd + ' | ' + sed_cmd
+            _logger.info('Issuing command: %s', cmd)
+            subprocess.check_call(cmd, shell=True)
 
-    update_gophermap = True
-    archive_dir = args.data_dir + '/archive/{0:%Y}/{0:%Y-%m-%d}'.format(now)
-    _logger.info('Copying staging directory to %s', archive_dir)
-    if os.path.exists(archive_dir):
-        _logger.warning('Destination folder already exists, overwriting')
-        update_gophermap = False
-        shutil.rmtree(archive_dir, ignore_errors=True)
-    shutil.copytree(tmp_archive_dir, archive_dir)
+        update_gophermap = True
+        archive_dir = args.data_dir + '/archive/{0:%Y}/{0:%Y-%m-%d}'.format(now)
+        _logger.info('Copying staging directory to %s', archive_dir)
+        if os.path.exists(archive_dir):
+            _logger.warning('Destination folder already exists, overwriting')
+            update_gophermap = False
+            shutil.rmtree(archive_dir, ignore_errors=True)
+        shutil.copytree(tmp_archive_dir, archive_dir)
 
-if update_gophermap:
-    gophermap = args.data_dir + '/archive/{:%Y}/gophermap'.format(now)
-    gophermap_exists = os.path.exists(gophermap)
-    with open(gophermap, 'a') as fp:
-        if not gophermap_exists:
-            _logger.info('Generating header for %s', gophermap)
-            fp.writelines([
-                '1HN Gopher Home Page\t/\n'.format(now),
-                'i \n',
-                'iThis directory contains historical snapshots of the stories on\n',
-                'ithe /live page. New entries are added daily at midnight (EST).\n',
-                'i \n',
-                '1..\t/archive\n'])
-        _logger.info('Appending a link to p1 to the gophermap')
-        fp.write('1HN Gopher Feed ({0:%Y-%m-%d})	/archive/{0:%Y}/{0:%Y-%m-%d}/p1\n'.format(now))
+    if update_gophermap:
+        gophermap = args.data_dir + '/archive/{:%Y}/gophermap'.format(now)
+        gophermap_exists = os.path.exists(gophermap)
+        with open(gophermap, 'a') as fp:
+            if not gophermap_exists:
+                _logger.info('Generating header for %s', gophermap)
+                fp.writelines([
+                    '1HN Gopher Home Page\t/\n'.format(now),
+                    'i \n',
+                    'iThis directory contains historical snapshots of the stories on\n',
+                    'ithe /live page. New entries are added daily at midnight (EST).\n',
+                    'i \n',
+                    '1..\t/archive\n'])
+            _logger.info('Appending a link to p1 to the gophermap')
+            fp.write('1HN Gopher Feed ({0:%Y-%m-%d})	/archive/{0:%Y}/{0:%Y-%m-%d}/p1\n'.format(now))
 
-_logger.info('Finished!')
+except Exception as e:
+    _logger.exception(e)
+    raise e
+
+else:
+    _logger.info('Finished!')
