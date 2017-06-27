@@ -49,7 +49,7 @@ Unfortunately, the gopher protocol hasn't been supported by major web browsers s
 - Install the free [OverbiteFF](https://addons.mozilla.org/en-US/firefox/addon/overbiteff/)
    addon for Firefox
    
-- As a last resort, there's a gateway that converts **gopher** sites to **http** so they can be viewed in your browser
+- As a last resort, Floodgap provides a gateway that converts **gopher** sites to **HTTP** so they can be viewed in your browser
   http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com
    
 ![screenshot](resources/combined_screens.png)
