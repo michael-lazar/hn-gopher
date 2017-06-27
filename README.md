@@ -39,7 +39,7 @@ HN Gopher is a read-only mirror for https://news.ycombinator.com/ served using t
 
 ## How to view this site
 
-Unfortunately, the gopher protocol hasn't been supported by major web browsers since the early 2000's. However, there are still a few good options for accessing Gopher in the modern age.
+Unfortunately, the gopher protocol hasn't been supported by major web browsers since the early 2000's. However, there are still a couple of options for accessing Gopher in the modern age.
 
 - Use **lynx** from the command line
    ```bash
