@@ -31,7 +31,7 @@
 
 ---
 
-**gopher://hngopher.com** (see below on "How to view this site")
+**gopher://hngopher.com** (see below for "How to view this site")
 
 ---
 
