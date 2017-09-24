@@ -39,7 +39,7 @@ HN Gopher is a read-only mirror for https://news.ycombinator.com/ served using t
 
 ## How to view this site
 
-The gopher protocol hasn't been supported by major web browsers since the early 2000's. Here are a few ways to browse Gopherspace in the modern age.
+The gopher protocol hasn't been supported by major web browsers since the early 2000's. Thankfully, there are still a few ways to browse Gopherspace in the modern age.
 
 - Install the free [OverbiteFF](https://addons.mozilla.org/en-US/firefox/addon/overbiteff/)
    addon for Firefox
