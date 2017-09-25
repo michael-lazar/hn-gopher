@@ -8,7 +8,7 @@
                         | |  | | (_| | (__|   <  __/ |    | |\  |  __/\ V  V /\__ \
                         |_|  |_|\__,_|\___|_|\_\___|_|    |_| \_|\___| \_/\_/ |___/
 	
-	                      - Gopher's "Underground" Hacker News Mirror
+	                           - The Underground Hacker News Mirror
                                             (updated hourly)
 	
 	                                           _________________
