@@ -47,7 +47,7 @@ i-- Feeds --
 1Archive	/archive
 i 
 i-- Information --
-1About	/about
+0About	/about
 hSource Code (WWW)	URL:http://github.com/michael-lazar/hn-gopher
 i
 i-- Links --
