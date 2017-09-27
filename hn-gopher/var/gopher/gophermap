@@ -47,15 +47,11 @@ i-- Feeds --
 1Archive	/archive
 i 
 i-- Information --
-0Contact	/about
-hHN Gopher Source Code (WWW)	URL:http://github.com/michael-lazar/hn-gopher
-i 
-i-- External Links --
-hHacker News (WWW) 	URL:http://news.ycombinator.com
-i 
-i-- Gopher Resources --
+About	/about
+hSource Code (WWW)	URL:http://github.com/michael-lazar/hn-gopher
+i
+i-- Links --
 1Floodgap Systems	/	gopher.floodgap.com	70
-1Search Gopherspace with Veronica-2	/v2	gopher.floodgap.com	70
 1xkcd - A webcomic of Romance, Sarcasm, Math and Languages	/fun/xkcd	gopher.floodgap.com	70
 1Gophernicus - a modern full-featured gopher server	/	gophernicus.org	70
 i 
