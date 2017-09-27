@@ -8,7 +8,7 @@
                         | |  | | (_| | (__|   <  __/ |    | |\  |  __/\ V  V /\__ \
                         |_|  |_|\__,_|\___|_|\_\___|_|    |_| \_|\___| \_/\_/ |___/
 	
-	                      - Gopher's "Underground" Hacker News Mirror
+	                           - The Underground Hacker News Mirror
                                             (updated hourly)
 	
 	                                           _________________
@@ -31,7 +31,7 @@
 
 ---
 
-**gopher://hngopher.com** (see below on "How to view this site")
+**gopher://hngopher.com** (see below for "How to view this site")
 
 ---
 
@@ -39,7 +39,7 @@ HN Gopher is a read-only mirror for https://news.ycombinator.com/ served using t
 
 ## How to view this site
 
-Unfortunately, the gopher protocol hasn't been supported by major web browsers since the early 2000's. However, there are still a couple of options for accessing Gopher in the modern age.
+The gopher protocol hasn't been supported by major web browsers since the early 2000's. Thankfully, there are still a few ways to browse Gopherspace in the modern age:
 
 - Install the free [OverbiteFF](https://addons.mozilla.org/en-US/firefox/addon/overbiteff/)
    addon for Firefox
@@ -49,8 +49,8 @@ Unfortunately, the gopher protocol hasn't been supported by major web browsers s
    $ lynx gopher://hngopher.com
    ```
    
-- As a last resort, Floodgap provides a gateway that converts **gopher** sites to **HTTP** so they can be viewed in your browser
-  http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com
+- As a last resort, Floodgap provides a gateway that converts **gopher** sites to **HTTP** so they can be viewed in your browser:
+  [HN Gopher on Floodgap](http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com)
    
 ![screenshot](resources/combined_screens.png)
 
@@ -65,7 +65,7 @@ that ping the [Hacker News API](https://hacker-news.firebaseio.com/v0/) and [Alg
 ```bash
 $ git clone https://github.com/michael-lazar/hn-gopher.git
 $ cd hn-gopher
-$ sudo ./deploy
+$ sudo ./deploy.sh
 ```
 
 ## License
