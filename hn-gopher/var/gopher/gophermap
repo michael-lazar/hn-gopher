@@ -41,15 +41,15 @@ ibeen converted to plain-text ASCII files. You can get started by
 iviewing the live feed, or you can search the archive for a date.
 i________________________________________________________________
 i
-iFeeds
+i+ Feeds
 =echo "1Live Feed (last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)	/live/p1/"
 1Archive	/archive
 i 
-iInformation
+i+ Information
 0About	/about
 hSource Code (WWW)	URL:http://github.com/michael-lazar/hn-gopher
 i
-iLinks
+i+ Links
 1Floodgap Systems	/	gopher.floodgap.com	70
 1Gopherpedia - Gopher interface to Wikipedia	/	gopherpedia.com	70
 1Bongusta - Phlog aggregator	/en/bongusta	i-logout.cz	70
