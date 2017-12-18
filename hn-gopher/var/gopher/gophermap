@@ -24,15 +24,15 @@ i           :     \        |  )    \000 9\ \\||  !    .   |
 i           \      )       ;_/      \000 9\ \.|  !        |
 i            `._ _/_  ___.'-'''      \000 9\ \|__!________/
 i               `--'''                ^^^^^`` \/_____\
-i
-i
+i 
+i 
 iStatus:
 =echo "    server time....: `date`"
 =echo "    server uptime..: `uptime | sed 's/.*up *\([^,]*\), .*/\1/'`"
 =echo "    server version.: $SERVER_VERSION \"$SERVER_CODENAME\""
 =echo "    server platform: $SERVER_ARCH"
-i
-i
+i 
+i 
 i                        About this page
 i________________________________________________________________
 iThis is a mirror of the popular tech news aggregator Hacker News
@@ -40,7 +40,7 @@ i(https://news.ycombinator.com). All stories and discussions have
 ibeen converted to plain-text ASCII files. You can get started by
 iviewing the live feed, or you can search the archive for a date.
 i________________________________________________________________
-i
+i 
 i+ Feeds
 =echo "1Live Feed (last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)	/live/p1/"
 1Archive	/archive
@@ -48,14 +48,14 @@ i
 i+ Information
 0About	/about
 hSource Code (WWW)	URL:http://github.com/michael-lazar/hn-gopher
-i
+i 
 i+ Links
-1Floodgap Systems	/	gopher.floodgap.com	70
-1Gopherpedia - Gopher interface to Wikipedia	/	gopherpedia.com	70
 1Bongusta - Phlog aggregator	/en/bongusta	i-logout.cz	70
+1Floodgap Systems	/	gopher.floodgap.com	70
 1Gopherchan - Chan style message board	/chan	port70.net	70
-1xkcd - A webcomic of romance, sarcasm, math and languages	/fun/xkcd	gopher.floodgap.com	70
 1Gophernicus - A modern full-featured gopher server	/	gophernicus.org	70
+1Gopherpedia - Gopher interface to Wikipedia	/	gopherpedia.com	70
+1XKCD - A webcomic of romance, sarcasm, math and languages	/fun/xkcd	gopher.floodgap.com	70
 i 
 =echo "We're not counting, but you're visitor number `/usr/local/bin/counter.sh`"
 i________________________________________________________________
