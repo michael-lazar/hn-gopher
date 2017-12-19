@@ -32,7 +32,7 @@
 ---
 
 <p align="center">
-<a href="gopher://hngopher.com">gopher://hngopher.com</a><br>
+<b><a href="gopher://hngopher.com">gopher://hngopher.com</a></b><br>
 <i>(see below for "How to view this site")</i>
 </p>
 
