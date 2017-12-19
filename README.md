@@ -31,7 +31,10 @@
 
 ---
 
-**gopher://hngopher.com** (see below for "How to view this site")
+<p align="center">
+<a href="gopher://hngopher.com">gopher://hngopher.com</a><br>
+<i>(see below for "How to view this site")</i>
+</p>
 
 ---
 
