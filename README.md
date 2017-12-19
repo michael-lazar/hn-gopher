@@ -43,20 +43,14 @@ HN Gopher is a read-only mirror for https://news.ycombinator.com/ served using t
 ## How to view this site
 
 The gopher protocol hasn't been supported by major web browsers since the early 2000's. Thankfully, there are still a few ways to browse Gopherspace in the modern age:
-
-- Install the free [OverbiteFF](https://addons.mozilla.org/en-US/firefox/addon/overbiteff/)
-   addon for Firefox
    
 - Use **lynx** from the command line
    ```bash
    $ lynx gopher://hngopher.com
    ```
    
-- As a last resort, Floodgap provides a gateway that converts **gopher** sites to **HTTP** so they can be viewed in your browser:
-  [HN Gopher on Floodgap](http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com)
-   
-![screenshot](resources/combined_screens.png)
-
+- Floodgap provides a gateway that converts **gopher** sites to **HTTP** so they can be viewed in your browser:
+  [http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com](http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com)
 
 ## How to deploy this project
 
