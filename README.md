@@ -49,7 +49,7 @@ The gopher protocol hasn't been supported by major web browsers since the early 
    $ lynx gopher://hngopher.com
    ```
    
-- Floodgap provides a gateway that converts **gopher** sites to **HTTP** so they can be viewed in your browser:
+- Floodgap provides a proxy gateway that converts **gopher** sites to **HTTP** so they can be viewed in your browser:
   [http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com](http://gopher.floodgap.com/gopher/gw?a=gopher%3A%2F%2Fhngopher.com)
 
 ## How to deploy this project
