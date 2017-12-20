@@ -1,5 +1,3 @@
-# HN Gopher
-
 ```
                          _    _            _               _   _
                         | |  | |          | |             | \ | |  hngopher.com:70
