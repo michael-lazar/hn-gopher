@@ -33,7 +33,7 @@ def parse_args():
 
 
 def setup_log(filename):
-    logger = logging.getLogger('scrape_hn')
+    logger = logging.getLogger('hn-scrape')
     logger.setLevel(logging.INFO)
 
     if filename:

@@ -24,7 +24,7 @@ def parse_args():
 
 
 def setup_log(filename):
-    logger = logging.getLogger('archive_hn')
+    logger = logging.getLogger('hn-archive')
     logger.setLevel(logging.INFO)
 
     if filename:

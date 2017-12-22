@@ -1,2 +1,2 @@
-0 * * * * root /usr/local/bin/scrape_hn --log-file /var/log/hngopher
-30 23 * * * root /usr/local/bin/archive_hn --log-file /var/log/hngopher
+0 * * * * root /usr/local/bin/hn-scrape --log-file /var/log/hngopher
+30 23 * * * root /usr/local/bin/hn-archive --log-file /var/log/hngopher

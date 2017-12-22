@@ -1,5 +1,0 @@
-1(home) /
-i
-=echo "iResults for query: $QUERY_STRING"
-i
-=/usr/local/bin/query_hn "i$QUERY_STRING"
