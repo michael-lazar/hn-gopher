@@ -8,13 +8,14 @@ Vagrant.configure(2) do |config|
   config.vm.box = "debian/jessie64"
 
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.network "forwarded_port", guest: 70, host: 70
 
   config.vm.provision "shell", inline: <<-SHELL
 
     # Setup the system
     timedatectl set-timezone UTC
-    apt-get install -y curl lynx vim
-    apt-get install -y python3 python3-requests python3-lxml python3-unidecode
+    apt install -y curl lynx vim sqlite redis-server
+    apt install -y python3 python3-requests python3-lxml python3-unidecode python3-redis
 
     # Install build dependencies
     apt-get install -y libwrap0-dev
@@ -31,6 +32,10 @@ Vagrant.configure(2) do |config|
     ln -s /vagrant/hn-gopher/var/gopher /var/gopher
     ln -s /vagrant/hn-gopher/bin/* /usr/local/bin
     ln -s /vagrant/hn-gopher/etc/cron.d/hngopher /etc/cron.d/hngopher
+
+    # Setup the directory where the database is stored
+    mkdir -p /var/lib/hngopher
+    chmod 777 /var/lib/hngopher
 
     rm -f /etc/default/gophernicus
     ln -s /vagrant/hn-gopher/opt/gophernicus_*/gophernicus.env /etc/default/gophernicus

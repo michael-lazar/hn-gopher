@@ -2,14 +2,20 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-apt-get install -y curl lynx vim
-apt-get install -y python3 python3-requests python3-lxml python3-unidecode
-apt-get install -y libwrap0-dev
+apt install -y curl lynx vim sqlite redis-server
+apt install -y python3 python3-requests python3-lxml python3-unidecode python3-redis
+apt install -y libwrap0-dev
 
-cp -R $DIR/hn-gopher/var/* /var/
+# Backup the gopher directory in case something goes wrong
+tar -cvzf ~/gopher-backup.tar.gz /var/gopher
+
+cp -R $DIR/hn-gopher/var/gopher/* /var/gopher/
 cp -R $DIR/hn-gopher/bin/* /usr/local/bin/
 cp -R $DIR/hn-gopher/etc/cron.d/* /etc/cron.d/
 cp -R $DIR/hn-gopher/opt/gophernicus_* /opt/
+
+mkdir -p /var/lib/hngopher
+chmod 777 /var/lib/hngopher
 
 pushd /opt/gophernicus_*
 make && make install && make clean-build
