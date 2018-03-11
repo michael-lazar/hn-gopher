@@ -15,7 +15,7 @@ from unidecode import unidecode
 
 
 # Free service, hopefully this one sticks around for a while
-GEOIP_URL = 'http://freegeoip.net/json/{ip_address}'
+GEOIP_URL = 'http://freegeoip.net/json/{0}'
 
 DB_FILE = '/var/lib/hngopher/hngopher.db'
 REDIS_DB = 0
@@ -117,6 +117,7 @@ def main():
             print('i ')
             print('i' + row[0].strftime('%Y-%m-%d %H:%M UTC'))
             print('i' + row[1])
+            print('i ')
             for line in row[2].split('\n'):
                 print('i' + line)
             print('i ')
@@ -125,7 +126,7 @@ def main():
 
     elif args.command == 'message':
         message = sanitize(os.environ['QUERY_STRING'])
-        message = '\n'.join(textwrap.wrap(message, 70)[:10])
+        message = '\n'.join(textwrap.wrap(message, 65)[:10])
         cache.hset(session_id, 'message', message)
         cache.expire(session_id, 600)
         new_message_prompt(message=message)
