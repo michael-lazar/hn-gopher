@@ -140,7 +140,7 @@ def update_story_file(story, page):
 def append_comment(comment, out, level=0):
     indent = 'i' + min(level, 5) * 2 * ' '
 
-    if 'author' in comment:
+    if comment.get('author'):
         info = indent + '{0} - {1}'.format(
             sanitize(comment['author']),
             humanize_timestamp(comment['created_at_i']))
@@ -167,7 +167,7 @@ def append_comment(comment, out, level=0):
 
     out.append('i ')
 
-    for child in comment['children']:
+    for child in comment.get('children', []):
         append_comment(child, out, level=level + 1)
 
 
