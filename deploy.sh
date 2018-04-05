@@ -2,8 +2,8 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-apt install -y curl lynx vim sqlite redis-server
-apt install -y python3 python3-requests python3-lxml python3-unidecode python3-redis
+apt install -y curl lynx vim sqlite
+apt install -y python3 python3-requests python3-lxml python3-unidecode
 apt install -y libwrap0-dev
 
 # Backup the gopher directory in case something goes wrong

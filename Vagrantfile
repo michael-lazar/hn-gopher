@@ -14,8 +14,8 @@ Vagrant.configure(2) do |config|
 
     # Setup the system
     timedatectl set-timezone UTC
-    apt install -y curl lynx vim sqlite redis-server
-    apt install -y python3 python3-requests python3-lxml python3-unidecode python3-redis
+    apt install -y curl lynx vim sqlite
+    apt install -y python3 python3-requests python3-lxml python3-unidecode
 
     # Install build dependencies
     apt-get install -y libwrap0-dev

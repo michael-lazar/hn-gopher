@@ -51,9 +51,7 @@ i+ Information
 hSource Code (Github)	URL:http://github.com/michael-lazar/hn-gopher
 i 
 i+ Notable Gopher Links
-1Bongusta     - Phlog aggregator	/en/bongusta	i-logout.cz	70
-1Gopherchan   - Chan style message board	/chan	port70.net	70
-1Gophernicus  - A modern full-featured gopher server	/	gophernicus.org	70
+1Bongusta     - A Phlog aggregator	/en/bongusta	i-logout.cz	70
 1Gopherpedia  - Gopher interface to Wikipedia	/	gopherpedia.com	70
 1XKCD         - A webcomic of romance, sarcasm, math and languages	/fun/xkcd	gopher.floodgap.com	70
 i 
