@@ -89,7 +89,7 @@ def main():
 
     elif args.command == 'new':
         # Display the new message form
-        print('iPlease use the following query to submit a brief message')
+        print('iPlease use the following query to post a brief message')
         print('i ')
         print('i' + '-' * 70)
         print('7Enter text here:	/guestbook/new/submit')
@@ -120,7 +120,7 @@ def main():
                 """, (session_id, message, timestamp, ip_address, ip_location))
             db.commit()
 
-            print('iYour message has been submitted!')
+            print('iYour message has been posted!')
             print('i ')
             print('iIn order to see your submission, you might need to reload')
             print('iyour gopher client in order to refresh the page cache.')
