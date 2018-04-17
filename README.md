@@ -67,7 +67,7 @@ $ sudo ./deploy.sh
 
 AGPLv3
 
-### Disclaimer
+## Disclaimer
 
 *This project is not affiliated with, maintained, authorized, endorsed or sponsored by the Y Combinator company.*
 
