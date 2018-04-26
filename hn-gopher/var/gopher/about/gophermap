@@ -1,0 +1,24 @@
+1HN Gopher Home Page	/
+i 
+iThis server is running on a RPi with the following specs:
+i 
+i  - Raspberry Pi 1 Model B (2012)
+i  - Raspbian GNU/Linux 9 (stretch)
+i  - 700 MHz single-core ARMv6
+i  - 512 MB RAM
+i  - 32 GB SD card
+i 
+iGopher pages are served using a modified version of gophernicus [0]
+iStories are scraped from Hacker News [1] at regular intervals using
+itheir web API.  Stories are saved as text in gophermap files on the
+ifilesystem. The guestbook runs using a custom CGI script written in
+ipython that stores comments in an SQLite database.
+i 
+iIf you have questions or comments, you can contact me via email
+i 
+i  - lazar.michael22@gmail.com
+i 
+iThanks for using gopher!
+i 
+h[0] https://github.com/kimholviala/gophernicus	URL:https://github.com/kimholviala/gophernicus
+h[1] https://news.ycombinator.com/	URL:https://news.ycombinator.com/
