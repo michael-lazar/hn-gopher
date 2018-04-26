@@ -7,7 +7,7 @@ apt install -y python3 python3-requests python3-lxml python3-unidecode
 apt install -y libwrap0-dev
 
 # Backup the gopher directory in case something goes wrong
-tar -cvzf ~/gopher-backup.tar.gz /var/gopher
+# tar -cvzf ~/gopher-backup.tar.gz /var/gopher
 
 cp -R $DIR/hn-gopher/var/gopher/* /var/gopher/
 cp -R $DIR/hn-gopher/bin/* /usr/local/bin/
