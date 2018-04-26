@@ -134,7 +134,7 @@ def update_story_file(story, page):
 
     item_dir = '{0}/items/{1}'.format(tmp_dir, story['id'])
     write_gophermap(item_dir, out)
-    dump_raw_story(item_dir, data)
+    # dump_raw_story(item_dir, data)
 
 
 def append_comment(comment, out, level=0):
