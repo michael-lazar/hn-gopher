@@ -25,3 +25,7 @@ rm -f /etc/default/gophernicus
 cp $DIR/hn-gopher/opt/gophernicus_*/gophernicus.env /etc/default/gophernicus
 
 touch /var/tmp/gopher-counter
+chmod 666 /var/tmp/gopher-counter
+
+# Setup DNS discovery if serving from a dynamic IP address
+# apt install -y ddclient
