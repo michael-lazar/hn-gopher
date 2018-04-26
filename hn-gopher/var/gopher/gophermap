@@ -41,6 +41,11 @@ ibeen converted to plain-text ASCII files. You can get started by
 iviewing the live feed, or you can search the archive for a date.
 i________________________________________________________________
 i 
+i*** News - 18/05/25 ***
+iThis server has recently been moved off of google cloud and onto
+ia decentralized raspberry pi at my house. I will be monitoring
+iperformance and the server may experience unexpected downtime.
+i 
 i+ Feeds
 =echo "1Live Feed (last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)	/live/p1/"
 1Archive	/archive
