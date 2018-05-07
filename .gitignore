@@ -3,4 +3,5 @@
 *.o
 hn-gopher/var/gopher/live/*
 hn-gopher/var/gopher/archive/2017
+hn-gopher/var/gopher/guestbook/gophermap
 .DS_Store

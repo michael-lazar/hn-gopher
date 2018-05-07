@@ -10,6 +10,11 @@ i ===(     )==========\\|//====================
 i_____\___/___________`---`___________________________________________
 i
 i
-=/usr/local/bin/hn-guestbook new
+iPlease use the following query to post a brief message. Be patient
+iafter submitting, this request might take 10+ seconds to complete.
+i
+i----------------------------------------------------------------------
+7Enter text here:	/guestbook/new/submit
+i----------------------------------------------------------------------
 i
 1Return	/guestbook

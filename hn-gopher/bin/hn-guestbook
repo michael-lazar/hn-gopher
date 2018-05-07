@@ -4,9 +4,10 @@ This is a custom CGI-style script that manages the guestbook operations.
 """
 
 import os
+import sys
 import sqlite3
-import argparse
 import textwrap
+from functools import partial
 from datetime import datetime
 
 import requests
@@ -15,20 +16,13 @@ from unidecode import unidecode
 
 # Free service, hopefully this one sticks around for a while
 GEOIP_URL = 'http://freegeoip.net/json/{0}'
-
 DB_FILE = '/var/lib/hngopher/hngopher.db'
-
-
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('command', choices=['dump', 'new', 'submit'])
-    parser.add_argument('--debug', action='store_true')
-    return parser.parse_args()
+GUESTBOOK_GOPHERMAP = '/var/gopher/guestbook/gophermap'
 
 
 def connect_db():
     """
-    Storing guestbook info in a local sqlite database.
+    Store guestbook info in a local sqlite database.
     """
     db = sqlite3.connect(DB_FILE, detect_types=sqlite3.PARSE_DECLTYPES)
     c = db.cursor()
@@ -47,7 +41,7 @@ def connect_db():
 
 def get_location(ip_address):
     """
-    Uses a free API service to geo-locate the user's IP address.
+    Use a free API service to geo-locate the user's IP address.
     """
     try:
         resp = requests.get(GEOIP_URL.format(ip_address), timeout=5)
@@ -57,83 +51,107 @@ def get_location(ip_address):
         return 'Somewhere on planet Earth'
 
 
-def sanitize(text):
-    return unidecode(text)
+def dump_gophermap(cursor):
+    """
+    Load entries from the SQLite3 database and write them to a gophermap.
 
+    It's faster to preload the gophermap vs generating it on demand via
+    CGI. Performance is especially noticeable on a Raspberry Pi 1 B, where
+    it can take seconds to launch the Python 3 runtime using CGI.
+    """
+    cursor.execute("""
+        SELECT
+          created,
+          ip_location,
+          message
+        FROM guestbook
+        ORDER BY created DESC
+        """)
 
-def main():
+    with open(GUESTBOOK_GOPHERMAP, 'w') as fp:
+        fp.write(textwrap.dedent(r"""
+            1HN Gopher Home Page	/
+            i 
+            i (`/\
+            i `=\/\ __...--~~~~~-._   _.-~~~~~--...__
+            i  `=\/\               \ /    HN GOPHER  \\
+            i   `=\/                V    GUEST BOOK   \\
+            i   //_\___--~~~~~~-._  |  _.-~~~~~~--...__\\
+            i  //  ) (..----~~~~._\ | /_.~~~~----.....__\\
+            i ===(     )==========\\|//====================
+            i_____\___/___________`---`___________________________________________
+            i 
+            1Sign the guestbook!	/guestbook/new
+            i 
+            """.lstrip('\n')))
 
-    args = parse_args()
-    db, c = connect_db()
-
-    if args.command == 'dump':
-        c.execute("""
-            SELECT
-              created,
-              ip_location,
-              message
-            FROM guestbook
-            ORDER BY created DESC
-            """)
-        for row in c.fetchall():
-            print('i' + '-=' * 35)
-            print('i ')
-            print('i' + row[0].strftime('%Y-%m-%d %H:%M UTC'))
-            print('i' + row[1])
-            print('i ')
+        p = partial(print, file=fp)
+        for row in cursor.fetchall():
+            p('i' + '-=' * 35)
+            p('i ')
+            p('i' + row[0].strftime('%Y-%m-%d %H:%M UTC'))
+            p('i' + row[1])
+            p('i ')
             for line in row[2].split('\n'):
-                print('i' + line)
-            print('i ')
-        print('i' + '-=' * 35)
-        print('i' + 26 * ' ' + '~ Thank you ~')
+                p('i' + line)
+            p('i ')
+        p('i' + '-=' * 35)
+        p('i' + 26 * ' ' + '~ Thank you ~')
 
-    elif args.command == 'new':
-        # Display the new message form
-        print('iPlease use the following query to post a brief message')
+
+def add_entry(db, cursor):
+    """
+    Save the query text in the guestbook database.
+
+    Gophernicus will take the text printed to stdout and add it to
+    the gophermap response.
+    """
+    if len(sys.argv) == 2 and sys.argv[1] == 'dump':
+        # Shortcut to rebuild the gophermap without submitting a new post
+        return
+
+    message = unidecode(os.environ['QUERY_STRING'])
+    message = '\n'.join(textwrap.wrap(message, 65)[:10])
+    if not message:
+        print('iError, no text submitted!')
         print('i ')
-        print('i' + '-' * 70)
-        print('7Enter text here:	/guestbook/new/submit')
-        print('i' + '-' * 70)
+        return
 
-    elif args.command == 'submit':
-        # Submit the query text to the guestbook
-        message = sanitize(os.environ['QUERY_STRING'])
-        message = '\n'.join(textwrap.wrap(message, 65)[:10])
-        if not message:
-            print('iError, no text submitted!')
-            print('i ')
+    timestamp = datetime.utcnow()
+    ip_address = os.environ['REMOTE_ADDR']
+    ip_location = get_location(ip_address)
+    session_id = os.environ['SESSION_ID']
 
-        else:
-            timestamp = datetime.utcnow()
-            ip_address = os.environ['REMOTE_ADDR']
-            ip_location = get_location(ip_address)
-            session_id = os.environ['SESSION_ID']
+    cursor.execute("""
+        INSERT INTO guestbook(
+          session,
+          message,
+          created,
+          ip_address,
+          ip_location)
+        VALUES (?, ?, ?, ?, ?);
+        """, (session_id, message, timestamp, ip_address, ip_location))
+    db.commit()
 
-            c.execute("""
-                INSERT INTO guestbook(
-                  session,
-                  message,
-                  created,
-                  ip_address,
-                  ip_location)
-                VALUES (?, ?, ?, ?, ?);
-                """, (session_id, message, timestamp, ip_address, ip_location))
-            db.commit()
-
-            print('iYour message has been posted!')
-            print('i ')
-            print('iIn order to see your submission, you might need to reload')
-            print('iyour gopher client in order to refresh the page cache.')
-
-    if args.debug:
-        # Dumps all of the CGI environment variables to the page
-        for key, val in sorted(os.environ.items()):
-            print('i{:20}: {}'.format(key, val))
+    print('iYour message has been posted!')
+    print('i ')
+    print('iIn order to see your submission, you might need to reload')
+    print('iyour gopher client in order to refresh the page cache.')
 
 
-try:
-    main()
-except Exception as e:
-    # Catch all exceptions to prevent dumping potentially sensitive
-    # text to stdout/stderr
-    print('iERROR: The server has encountered a fatal error')
+if __name__ == '__main__':
+
+    try:
+        db, cursor = connect_db()
+        add_entry(db, cursor)
+        dump_gophermap(cursor)
+
+        # Print all of the CGI environment variables to the page
+        # for key, val in sorted(os.environ.items()):
+        #     print('i{:20}: {}'.format(key, val))
+    except Exception as e:
+        # Catch all exceptions to prevent dumping potentially sensitive
+        # text to stdout/stderr
+        print('i' + str(e))
+        print('i ')
+        print('iERROR: The server has encountered a fatal error!')

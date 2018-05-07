@@ -40,6 +40,10 @@ Vagrant.configure(2) do |config|
     rm -f /etc/default/gophernicus
     ln -s /vagrant/hn-gopher/opt/gophernicus_*/gophernicus.env /etc/default/gophernicus
 
+    /usr/local/bin/hn-guestbook dump
+    chmod a+w /var/gopher/guestbook/gophermap
+    chmod a+w /var/lib/hngopher/hngopher.db
+
     # Test the server
     echo -e "127.0.0.1\thngopher.com" >> /etc/hosts
     curl gopher://hngopher.com
