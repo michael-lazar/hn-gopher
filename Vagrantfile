@@ -7,13 +7,14 @@ Vagrant.configure(2) do |config|
 
   config.vm.box = "debian/jessie64"
 
-  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.synced_folder(".", "/vagrant")
   config.vm.network "forwarded_port", guest: 70, host: 70
 
   config.vm.provision "shell", inline: <<-SHELL
 
     # Setup the system
     timedatectl set-timezone UTC
+    apt install -y build-essential
     apt install -y curl lynx vim sqlite
     apt install -y python3 python3-requests python3-lxml python3-unidecode
 
