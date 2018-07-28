@@ -8,6 +8,7 @@ import logging
 import argparse
 import textwrap
 import tempfile
+from time import sleep
 from itertools import islice
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
@@ -76,10 +77,25 @@ def humanize_timestamp(timestamp):
     return '%d years ago' % years
 
 
+def safe_request(url, retries=5):
+    # Have observed that the HN Algolia API sometimes returns 404's for
+    # valid URLs. But after a couple of attempts it starts to work again.
+    for _ in range(retries):
+        try:
+            _logger.info(url)
+            resp = session.get(url)
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            _logger.warning(e)
+            sleep(1)
+        else:
+            return resp
+    raise RuntimeError('Unable to complete HTTP request, aborting script')
+
+
 def story_generator(stories):
     for story_id in stories:
-        resp = session.get('{0}item/{1}.json'.format(HN_URL, story_id))
-        resp.raise_for_status()
+        resp = safe_request('{0}item/{1}.json'.format(HN_URL, story_id))
         data = resp.json()
         if data['type'] in ('story', 'job'):
             yield data
@@ -100,9 +116,7 @@ def dump_raw_story(directory, data):
 
 
 def update_story_file(story, page):
-
-    resp = session.get('{0}/items/{1}'.format(HN_SEARCH_URL, story['id']))
-    resp.raise_for_status()
+    resp = safe_request('{0}items/{1}'.format(HN_SEARCH_URL, story['id']))
     data = resp.json()
 
     out = [
@@ -174,8 +188,7 @@ def append_comment(comment, out, level=0):
 def update_live_feed():
 
     _logger.info('Fetching list of top stories')
-    resp = session.get('{0}{1}.json'.format(HN_URL, 'topstories'))
-    resp.raise_for_status()
+    resp = safe_request('{0}{1}.json'.format(HN_URL, 'topstories'))
     data = resp.json()
 
     story_gen = story_generator(data)
