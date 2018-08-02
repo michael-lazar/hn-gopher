@@ -13,9 +13,10 @@ from datetime import datetime
 import requests
 from unidecode import unidecode
 
+# Generate a free API key here https://ipstack.com/documentation
+GEOIP_URL = 'http://api.ipstack.com/{0}'
+GEOIP_KEY = '/var/lib/hngopher/geoip.txt'
 
-# Free service, hopefully this one sticks around for a while
-GEOIP_URL = 'http://freegeoip.net/json/{0}'
 DB_FILE = '/var/lib/hngopher/hngopher.db'
 GUESTBOOK_GOPHERMAP = '/var/gopher/guestbook/gophermap'
 
@@ -44,7 +45,9 @@ def get_location(ip_address):
     Use a free API service to geo-locate the user's IP address.
     """
     try:
-        resp = requests.get(GEOIP_URL.format(ip_address), timeout=5)
+        url = GEOIP_URL.format(ip_address)
+        payload = {'access_key': open(GEOIP_KEY).read().strip()}
+        resp = requests.get(url, payload=payload, timeout=5)
         data = resp.json()
         return '{city}, {region_name}, {country_name}'.format(**data)
     except Exception:
