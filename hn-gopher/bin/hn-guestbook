@@ -47,9 +47,13 @@ def get_location(ip_address):
     try:
         url = GEOIP_URL.format(ip_address)
         payload = {'access_key': open(GEOIP_KEY).read().strip()}
-        resp = requests.get(url, payload=payload, timeout=5)
+        resp = requests.get(url, params=payload, timeout=5)
         data = resp.json()
-        return '{city}, {region_name}, {country_name}'.format(**data)
+        if not data['city'] and not data['region_name']:
+            # I saw this happen for a Brazil IP address
+            return data['country_name']
+        else:
+            return '{city}, {region_name}, {country_name}'.format(**data)
     except Exception:
         return 'Somewhere on planet Earth'
 
