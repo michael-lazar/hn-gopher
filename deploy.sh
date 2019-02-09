@@ -2,9 +2,11 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-apt install -y curl lynx vim sqlite
-apt install -y python3 python3-requests python3-lxml python3-unidecode
+apt install -y curl lynx vim sqlite openssl
+apt install -y python3 python3-pip python3-requests python3-lxml python3-unidecode
 apt install -y libwrap0-dev
+pip3 install html2text==2018.1.9
+pip3 install gmail
 
 # Backup the gopher directory in case something goes wrong
 # tar -cvzf ~/gopher-backup.tar.gz /var/gopher

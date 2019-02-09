@@ -2,6 +2,7 @@
 
 import os
 import io
+import re
 import json
 import shutil
 import logging
@@ -14,44 +15,74 @@ from datetime import datetime
 from logging.handlers import RotatingFileHandler
 
 import requests
-from lxml import html
+from html2text import HTML2Text
+from html2text import config as html2text_conf
 from unidecode import unidecode
 
+# The "Official" Hacker news API
 HN_URL = 'https://hacker-news.firebaseio.com/v0/'
-# This API is nice because it can return all comments for a story with a
-# single HTTP call
+
+# An unofficial API that's used because it can return all of the comments for
+# a story with a single HTTP call.
 HN_SEARCH_URL = 'https://hn.algolia.com/api/v1/'
 
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--log-file')
-    parser.add_argument('--data-dir', default='/var/gopher')
-    parser.add_argument('--page-size', default=10)
-    parser.add_argument('--page-count', default=10)
-    parser.add_argument('--line-width', default=67)
-    return parser.parse_args()
+parser = argparse.ArgumentParser()
+parser.add_argument('--log-file')
+parser.add_argument('--data-dir', default='/var/gopher')
+parser.add_argument('--page-size', default=10)
+parser.add_argument('--page-count', default=10)
+parser.add_argument('--line-width', default=67)
+args = parser.parse_args()
 
 
-def setup_log(filename):
-    logger = logging.getLogger('hn-scrape')
-    logger.setLevel(logging.INFO)
+# Setup logging
+logger = logging.getLogger('hn-scrape')
+logger.setLevel(logging.INFO)
+if args.log_file:
+    handler = RotatingFileHandler(
+        filename=args.log_file, maxBytes=5*1024*1024, backupCount=5)
+else:
+    handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(filename)s:%(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
-    if filename:
-        handler = RotatingFileHandler(
-            filename=filename, maxBytes=5*1024*1024, backupCount=5)
-    else:
-        handler = logging.StreamHandler()
-
-    fmt = logging.Formatter('%(asctime)s:%(levelname)s:%(filename)s:%(message)s')
-    handler.setFormatter(fmt)
-    logger.addHandler(handler)
-    return logger
+session = requests.session()
 
 
-def sanitize(text):
-    # 7-bit ASCII was good enough for 1991, so it's good enough for me
-    # This package helps convert things like smart quotes to plain ascii
+# The API returns comments as formatted HTML so we need to convert to markdown
+html_parser = HTML2Text()
+html_parser.body_width = 0
+html_parser.ignore_links = True
+
+# No need to escape markdown sensitive characters with backslashes because we
+# won't actually be rendering the text in a markdown engine.
+regex_noop = re.compile(r'a^')
+html2text_conf.RE_MD_CHARS_MATCHER = regex_noop
+html2text_conf.RE_MD_BACKSLASHMATCHER = regex_noop
+html2text_conf.RE_MD_DOT_MATCHER = regex_noop
+html2text_conf.RE_MD_PLUS_MATCHER = regex_noop
+html2text_conf.RE_MD_DASH_MATCHER = regex_noop
+
+
+def text_chop(text):
+    if len(text) > args.line_width:
+        return text[:args.line_width - 3] + '...'
+    return text
+
+
+def text_repeat(char):
+    return char * args.line_width
+
+
+def sanitize(text, is_html=False):
+    if not text:
+        return ''
+
+    if is_html:
+        text = html_parser.handle(text)
+
     return unidecode(text)
 
 
@@ -82,11 +113,11 @@ def safe_request(url, retries=5):
     # valid URLs. But after a couple of attempts it starts to work again.
     for _ in range(retries):
         try:
-            _logger.info(url)
+            logger.info(url)
             resp = session.get(url)
             resp.raise_for_status()
         except requests.exceptions.HTTPError as e:
-            _logger.warning(e)
+            logger.warning(e)
             sleep(1)
         else:
             return resp
@@ -115,17 +146,17 @@ def dump_raw_story(directory, data):
         json.dump(data, fp)
 
 
-def update_story_file(story, page):
+def update_story_file(story, page, path):
     resp = safe_request('{0}items/{1}'.format(HN_SEARCH_URL, story['id']))
     data = resp.json()
 
     out = [
         '1HN Gopher Live Feed - page {0} of {1}\t/live/p{0}'.format(page, args.page_count),
         'i ',
-        'i' + text_repeater('_')]
+        'i' + text_repeat('_')]
 
     title = sanitize(story['title'])
-    out.extend('i{0}'.format(l) for l in text_wrapper.wrap(title))
+    out.extend('i{0}'.format(l) for l in textwrap.wrap(title, args.line_width))
     info = 'i{0} points by {1}'.format(story['score'], sanitize(story['by']))
     out.append(info)
 
@@ -134,48 +165,48 @@ def update_story_file(story, page):
         out.append('h{0}\tURL:{1}'.format(safe_url, story['url']))
     elif story.get('text'):
         # Strip out HTML tags
-        doc = html.fromstring(story['text'])
-        text = sanitize(doc.text_content())
+        text = sanitize(story.get('text'), is_html=True)
         out.append('i ')
-        out.extend(['i' + l for l in text_wrapper.wrap(text)])
+        out.extend(['i' + l for l in textwrap.wrap(text, args.line_width)])
 
     out.extend([
-        'i' + text_repeater('_'),
+        'i' + text_repeat('_'),
         'i '])
 
     for child in data['children']:
         append_comment(child, out, level=0)
 
-    item_dir = '{0}/items/{1}'.format(tmp_dir, story['id'])
+    item_dir = '{0}/items/{1}'.format(path, story['id'])
     write_gophermap(item_dir, out)
     # dump_raw_story(item_dir, data)
 
 
 def append_comment(comment, out, level=0):
-    indent = 'i' + min(level, 5) * 2 * ' '
+    indent = 'i' + min(level, 4) * 2 * ' '
+    body_indent = indent + '| '
 
     if comment.get('author'):
-        info = indent + '{0} - {1}'.format(
+        info = indent + '|{0} - {1}'.format(
             sanitize(comment['author']),
             humanize_timestamp(comment['created_at_i']))
         out.append(info)
 
-        # The text field contains HTML markup like <p> and <a>,
-        # as well as HTML escaped characters.
-        if comment['text']:
-            doc = html.fromstring(comment['text'])
-            text = doc.text_content()
-        else:
-            # See id 14626305 for an example of a text-less comment
-            text = ''
-
+        # See id 14626305 for an example of a text-less comment
+        text = sanitize(comment.get('text'), is_html=True)
         wrapper = textwrap.TextWrapper(
-            initial_indent=indent,
-            subsequent_indent=indent,
-            width=args.line_width + 1)  # +1 for the prepended "i"
-        text_lines = wrapper.wrap(text)
+            initial_indent=body_indent,
+            subsequent_indent=body_indent,
+            # width + 1 because the "i" at the beginning of the line doesn't count
+            width=args.line_width + 1,
+            drop_whitespace=True,
+            replace_whitespace=False,
+        )
+        for paragraph in text.strip().split('\n\n'):
+            text_lines = wrapper.wrap(paragraph)
+            out.extend(text_lines)
+            out.append(body_indent)
+        out.pop()  # Drop the blank line after the last paragraph
 
-        out.extend(text_lines)
     else:
         out.append(indent + '[deleted]')
 
@@ -185,16 +216,16 @@ def append_comment(comment, out, level=0):
         append_comment(child, out, level=level + 1)
 
 
-def update_live_feed():
+def update_live_feed(path):
 
-    _logger.info('Fetching list of top stories')
+    logger.info('Fetching list of top stories')
     resp = safe_request('{0}{1}.json'.format(HN_URL, 'topstories'))
     data = resp.json()
 
     story_gen = story_generator(data)
     story_ids = []
     for page in range(1, args.page_count + 1):
-        _logger.info('Building page %s', page)
+        logger.info('Building page %s', page)
 
         # Some gopher browsers (notably the iphone app) don't display an empty
         # comment line unless it contains at least one character, so add a space.
@@ -240,7 +271,7 @@ def update_live_feed():
                 out.append(link)
 
             # Update the story's comment file
-            update_story_file(story, page)
+            update_story_file(story, page, path)
 
         if page != args.page_count:
             out.extend([
@@ -248,47 +279,30 @@ def update_live_feed():
                 'i(more)',
                 '1HN Gopher Live Feed - page {0} of {1}\t/live/p{0}'.format(page + 1, args.page_count)])
 
-        page_dir = '{0}/p{1}'.format(tmp_dir, page)
+        page_dir = '{0}/p{1}'.format(path, page)
         write_gophermap(page_dir, out)
 
 
-##############################################################################
 # Main
-##############################################################################
-args = parse_args()
-
-text_wrapper = textwrap.TextWrapper(args.line_width)
-text_repeater = lambda char: char * args.line_width
-
-
-def text_chop(text):
-    if len(text) > args.line_width:
-        return text[:args.line_width - 3] + '...'
-    return text
-
-
-session = requests.session()
-_logger = setup_log(args.log_file)
-
 try:
     # Stage everything in a temporary directory
     with tempfile.TemporaryDirectory() as tmp_dir:
-        _logger.info('Setting up staging directory %s', tmp_dir)
+        logger.info('Setting up staging directory %s', tmp_dir)
         os.chmod(tmp_dir, 0o755)
 
-        update_live_feed()
+        update_live_feed(tmp_dir)
 
         live_dir = args.data_dir + '/live'
 
-        _logger.info('Clearing existing stories')
+        logger.info('Clearing existing stories')
         shutil.rmtree(live_dir, ignore_errors=True)
 
-        _logger.info('Copying staging directory to %s', live_dir)
+        logger.info('Copying staging directory to %s', live_dir)
         shutil.copytree(tmp_dir, live_dir)
 
 except Exception as e:
-    _logger.exception(e)
+    logger.exception(e)
     raise e
 
 else:
-    _logger.info('Finished!')
+    logger.info('Finished!')
