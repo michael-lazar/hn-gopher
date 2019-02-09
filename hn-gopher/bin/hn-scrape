@@ -199,7 +199,7 @@ def append_comment(comment, out, level=0):
             # width + 1 because the "i" at the beginning of the line doesn't count
             width=args.line_width + 1,
             drop_whitespace=True,
-            replace_whitespace=False,
+            replace_whitespace=True,
         )
         for paragraph in text.strip().split('\n\n'):
             text_lines = wrapper.wrap(paragraph)
