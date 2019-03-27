@@ -30,9 +30,9 @@ HN_SEARCH_URL = 'https://hn.algolia.com/api/v1/'
 parser = argparse.ArgumentParser()
 parser.add_argument('--log-file')
 parser.add_argument('--data-dir', default='/var/gopher')
-parser.add_argument('--page-size', default=10)
-parser.add_argument('--page-count', default=10)
-parser.add_argument('--line-width', default=67)
+parser.add_argument('--page-size', default=20, type=int)
+parser.add_argument('--page-count', default=5, type=int)
+parser.add_argument('--line-width', default=67, type=int)
 args = parser.parse_args()
 
 
@@ -151,9 +151,10 @@ def update_story_file(story, page, path):
     data = resp.json()
 
     out = [
-        '1HN Gopher Live Feed - page {0} of {1}\t/live/p{0}'.format(page, args.page_count),
+        '1HN Gopher Live Feed - Page {0}\t/live/p{0}'.format(page),
         'i ',
-        'i' + text_repeat('_')]
+        'i' + text_repeat('_')
+    ]
 
     title = sanitize(story['title'])
     out.extend('i{0}'.format(l) for l in textwrap.wrap(title, args.line_width))
@@ -229,13 +230,11 @@ def update_live_feed(path):
 
         # Some gopher browsers (notably the iphone app) don't display an empty
         # comment line unless it contains at least one character, so add a space.
-        out = ['1HN Gopher Home Page\t/'.format(page)]
-
-        if page != 1:
-            out.extend([
-                'i ',
-                'i(previous)',
-                '1HN Gopher Live Feed - page {0} of {1}\t/live/p{0}'.format(page - 1, args.page_count)])
+        out = [
+            '1Home\t/',
+            'i ',
+            'iHN GOPHER LIVE FEED - PAGE {0}'.format(page)
+        ]
 
         for story in islice(story_gen, args.page_size):
             story_ids.append(story['id'])
@@ -243,32 +242,22 @@ def update_live_feed(path):
 
             # Title and URL
             title = text_chop(sanitize(story['title']))
-            if story.get('url'):
-                out.append('h{0}\tURL:{1}'.format(title, story['url']))
-            else:
-                out.append('i{0}'.format(title))
+            link = '1{0}\t/live/items/{1}'.format(title[:args.line_width], story['id'])
+            out.append(link)
 
             # Additional info
             if story['type'] == 'job':
-                info = 'i{0} points {1}'.format(
+                info = 'i{0} points {1} (job listing)'.format(
                     story['score'],
                     humanize_timestamp(story['time']))
             else:
-                info = 'i{0} points by {1} {2}'.format(
+                info = 'i{0} points by {1} {2} ({3} comments)'.format(
                     story['score'],
                     sanitize(story['by']),
-                    humanize_timestamp(story['time']))
+                    humanize_timestamp(story['time']),
+                    story['descendants']
+                )
             out.append(info)
-
-            # Link to comments
-            if story['type'] == 'job':
-                comments = 'view listing - {0}'.format(title)
-                link = '1{0}\t/live/items/{1}'.format(comments[:args.line_width], story['id'])
-                out.append(link)
-            else:
-                comments = 'view comments ({0}) - {1}'.format(story['descendants'], title)
-                link = '1{0}\t/live/items/{1}'.format(comments[:args.line_width], story['id'])
-                out.append(link)
 
             # Update the story's comment file
             update_story_file(story, page, path)
@@ -276,8 +265,8 @@ def update_live_feed(path):
         if page != args.page_count:
             out.extend([
                 'i ',
-                'i(more)',
-                '1HN Gopher Live Feed - page {0} of {1}\t/live/p{0}'.format(page + 1, args.page_count)])
+                'iView next page',
+                '1HN Gopher Live Feed - Page {0}\t/live/p{0}'.format(page + 1)])
 
         page_dir = '{0}/p{1}'.format(path, page)
         write_gophermap(page_dir, out)
