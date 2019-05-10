@@ -7,8 +7,13 @@ Vagrant.configure(2) do |config|
 
   config.vm.box = "debian/jessie64"
 
-  config.vm.synced_folder(".", "/vagrant")
+  config.vm.synced_folder(
+  	".",
+  	"/vagrant",
+  	:nfs => { :mount_options => ["dmode=777","fmode=777"] }
+  	)
   config.vm.network "forwarded_port", guest: 70, host: 70
+  config.vm.network "private_network", type: "dhcp"
 
   config.vm.provision "shell", inline: <<-SHELL
 
