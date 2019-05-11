@@ -2,12 +2,13 @@
 i
 iServer Information:
 i
-i  - Raspberry Pi 1 Model B (2012)
+i  - Raspberry Pi 3 Model B (2016)
 i  - Raspbian GNU/Linux 9 (stretch)
 i  - Gophernicus/2.4 "Millennium Edition" (with modifications)
-i  - 700 MHz single-core ARMv6
-i  - 512 MB RAM
-i  - 32 GB SD card
+i  - Quad Cortex A53 @ 1.2 GHz
+i  - 400 MHz VideoCore IV
+i  - 1 GB SDRAM
+i  - 32 GB micro-SD card
 i
 iThis server is running on a Raspberry Pi in the sysadmin's closet.
 iAs such, please be tolerant of occasional downtime and lag spikes.
