@@ -32,7 +32,6 @@ iviewing the live feed, or you can search the archive for a date.
 i
 1Live Feed	/live/p1/
 =echo "i(last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)"
-i
 1Archived Content	/archive
 i
 1Information	/about
