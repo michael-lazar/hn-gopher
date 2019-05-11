@@ -151,7 +151,7 @@ def update_story_file(story, page, path):
     data = resp.json()
 
     out = [
-        '1HN Gopher Live Feed - Page {0}\t/live/p{0}'.format(page),
+        '1HN Gopher Feed - Page {0}\t/live/p{0}'.format(page),
         'i ',
         'i' + text_repeat('_')
     ]
@@ -231,9 +231,10 @@ def update_live_feed(path):
         # Some gopher browsers (notably the iphone app) don't display an empty
         # comment line unless it contains at least one character, so add a space.
         out = [
-            '1Home\t/',
+            '1HN Gopher Home\t/',
             'i ',
-            'iHN GOPHER LIVE FEED - PAGE {0}'.format(page)
+            'iHN Gopher Feed',
+            'i(page {0})'.format(page),
         ]
 
         for story in islice(story_gen, args.page_size):
@@ -265,8 +266,8 @@ def update_live_feed(path):
         if page != args.page_count:
             out.extend([
                 'i ',
-                'iView next page',
-                '1HN Gopher Live Feed - Page {0}\t/live/p{0}'.format(page + 1)])
+                '1Go to the next page\t/live/p{0}'.format(page + 1)]
+            )
 
         page_dir = '{0}/p{1}'.format(path, page)
         write_gophermap(page_dir, out)

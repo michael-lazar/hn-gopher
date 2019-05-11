@@ -65,6 +65,7 @@ try:
             's|^1HN Gopher Live Feed|1HN Gopher Archive [{:%Y-%m-%d}]|g',
             's|^1HN GOPHER LIVE FEED|1HN GOPHER ARCHIVE [{:%Y-%m-%d}]|g',
             's|^iHN GOPHER LIVE FEED|iHN GOPHER ARCHIVE [{:%Y-%m-%d}]|g',
+            's|^iHN Gopher Feed|iHN Gopher Feed [{:%Y-%m-%d}]|g',
             's|	/live/|	/archive/{0:%Y}/{0:%Y-%m-%d}/|g']
 
         for pattern in patterns:
@@ -90,7 +91,7 @@ try:
             if not gophermap_exists:
                 _logger.info('Generating header for %s', gophermap)
                 fp.writelines([
-                    '1Home\t/\n',
+                    '1HN Gopher Home\t/\n',
                     'i \n',
                     'i      ___ _  _ ____    ____ ____ ____ _  _ _ _  _ ____\n',
                     'i       |  |__| |___    |__| |__/ |    |__| | |  | |___\n',

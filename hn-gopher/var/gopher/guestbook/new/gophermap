@@ -1,4 +1,4 @@
-1Home	/
+1HN Gopher Home	/
 i 
 i (`/\
 i `=\/\ __...--~~~~~-._   _.-~~~~~--...__
@@ -9,12 +9,8 @@ i  //  ) (..----~~~~._\ | /_.~~~~----.....__\\
 i ===(     )==========\\|//====================
 i_____\___/___________`---`___________________________________________
 i
-i
 iPlease use the following query to post a brief message. Be patient
-iafter submitting, this request might take 10+ seconds to complete.
+iafter submitting, this request might take 10+ seconds to complete:
+7Enter text here	/guestbook/new/submit
 i
-i----------------------------------------------------------------------
-7Enter text here:	/guestbook/new/submit
-i----------------------------------------------------------------------
-i
-1Return	/guestbook
+1Back to the guestbook	/guestbook

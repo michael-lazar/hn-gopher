@@ -13,22 +13,18 @@ from datetime import datetime
 import requests
 from unidecode import unidecode
 
-# Generate a free API key here https://ipstack.com/documentation
-GEOIP_URL = 'http://api.ipstack.com/{0}'
-GEOIP_KEY = '/var/lib/hngopher/geoip.txt'
-
 DB_FILE = '/var/lib/hngopher/hngopher.db'
 GUESTBOOK_GOPHERMAP = '/var/gopher/guestbook/gophermap'
 
 
 def connect_db():
     """
-    Store guestbook info in a local sqlite database.
+    Use an SQLite database to store the guestbook data.
     """
     db = sqlite3.connect(DB_FILE, detect_types=sqlite3.PARSE_DECLTYPES)
-    c = db.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS `guestbook` (
+    cursor = db.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS guestbook (
           id int PRIMARY KEY,
           session int,
           message text,
@@ -37,25 +33,7 @@ def connect_db():
           ip_location text);
         """)
     db.commit()
-    return db, c
-
-
-def get_location(ip_address):
-    """
-    Use a free API service to geo-locate the user's IP address.
-    """
-    try:
-        url = GEOIP_URL.format(ip_address)
-        payload = {'access_key': open(GEOIP_KEY).read().strip()}
-        resp = requests.get(url, params=payload, timeout=5)
-        data = resp.json()
-        if not data['city'] and not data['region_name']:
-            # I saw this happen for a Brazil IP address
-            return data['country_name']
-        else:
-            return '{city}, {region_name}, {country_name}'.format(**data)
-    except Exception:
-        return 'Somewhere on planet Earth'
+    return db, cursor
 
 
 def dump_gophermap(cursor):
@@ -68,9 +46,8 @@ def dump_gophermap(cursor):
     """
     cursor.execute("""
         SELECT
-          created,
-          ip_location,
-          message
+            created,
+            message
         FROM guestbook
         ORDER BY created DESC
         """)
@@ -94,15 +71,10 @@ def dump_gophermap(cursor):
 
         p = partial(print, file=fp)
         for row in cursor.fetchall():
-            p('i' + '-=' * 35)
-            p('i ')
-            p('i' + row[0].strftime('%Y-%m-%d %H:%M UTC'))
-            p('i' + row[1])
-            p('i ')
-            for line in row[2].split('\n'):
+            p('i{}'.format(row[0].strftime('%Y-%m-%d %I:%M %p')))
+            for line in row[1].split('\n'):
                 p('i' + line)
             p('i ')
-        p('i' + '-=' * 35)
         p('i' + 26 * ' ' + '~ Thank you ~')
 
 
@@ -126,8 +98,12 @@ def add_entry(db, cursor):
 
     timestamp = datetime.utcnow()
     ip_address = os.environ['REMOTE_ADDR']
-    ip_location = get_location(ip_address)
     session_id = os.environ['SESSION_ID']
+
+    # I previously used geolocation to display where the messages were being
+    # posted from. But I noticed that the locations were often inaccurate and
+    # international addresses were incomplete or mangled.
+    ip_location = None
 
     cursor.execute("""
         INSERT INTO guestbook(
@@ -146,13 +122,11 @@ def add_entry(db, cursor):
     print('iyour gopher client in order to refresh the page cache.')
 
 
-if __name__ == '__main__':
-
+def main():
     try:
         db, cursor = connect_db()
         add_entry(db, cursor)
         dump_gophermap(cursor)
-
         # Print all of the CGI environment variables to the page
         # for key, val in sorted(os.environ.items()):
         #     print('i{:20}: {}'.format(key, val))
@@ -162,3 +136,7 @@ if __name__ == '__main__':
         print('i' + str(e))
         print('i ')
         print('iERROR: The server has encountered a fatal error!')
+
+
+if __name__ == '__main__':
+    main()
