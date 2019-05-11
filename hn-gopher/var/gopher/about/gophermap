@@ -15,7 +15,10 @@ iAs such, please be tolerant of occasional downtime and lag spikes.
 i
 iThe code has been open-source'd and made available on Github
 hhttp://github.com/michael-lazar/hn-gopher	URL:http://github.com/michael-lazar/hn-gopher
-i 
+i
+iView recent site changes
+0Server Log	/about/log.txt
+i
 iIf you have questions or comments, you can contact me via email
 hlazar.michael22@gmail.com	URL:mailto:lazar.michael22@gmail.com
 i

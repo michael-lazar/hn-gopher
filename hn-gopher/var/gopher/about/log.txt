@@ -1,0 +1,15 @@
+# May 11, 2019
+
+The server has been moved from an RPi 1 Model B to an RPi 3.
+Double the RAM and 4x the CPU cores! This should help to
+alleviate some of the slowness that I was observing,
+particularly when posting new messages to the guestbook.
+
+I have also refreshed the formatting on several pages. This
+was done as part of an effort to streamline the UI experience.
+Of note, the guestbook is now cleaner and no longer attempts
+to include geo-location data based on the message IP address.
+
+Since I was migrating the server, I took the opportunity to
+create a backup. The /archive section is now up to 2.4 GB in
+total size.

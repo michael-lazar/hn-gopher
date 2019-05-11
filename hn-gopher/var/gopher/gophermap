@@ -25,6 +25,7 @@ i           \      )       ;_/      \000 9\ \.|  !        |
 i            `._ _/_  ___.'-'''      \000 9\ \|__!________/
 i               `--'''                ^^^^^`` \/_____\
 i
+i________________________________________________________________
 iThis is a mirror of the popular tech news aggregator Hacker News
 i(https://news.ycombinator.com). All stories and discussions have
 ibeen converted to plain-text ASCII files. You can get started by
@@ -33,8 +34,8 @@ i________________________________________________________________
 i
 1Live Feed	/live/p1/
 =echo "i(last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)"
-1Archived Content	/archive
 i
+1Archive	/archive
 1Information	/about
 1Guestbook	/guestbook
 i
