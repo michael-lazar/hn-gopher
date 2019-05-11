@@ -28,16 +28,15 @@ i
 i________________________________________________________________
 iThis is a mirror of the popular tech news aggregator Hacker News
 i(https://news.ycombinator.com). All stories and discussions have
-ibeen converted to plain-text ASCII files. You can get started by
-iviewing the live feed, or you can search the archive for a date.
+ibeen converted to plain-text ASCII. Have fun exploring the site!
 i________________________________________________________________
 i
 1Live Feed	/live/p1/
 =echo "i(last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)"
 i
 1Archive	/archive
-1Information	/about
 1Guestbook	/guestbook
+1Information	/about
 i
 =echo "We're not counting, but you're visitor number `/usr/local/bin/counter.sh`"
 i________________________________________________________________
