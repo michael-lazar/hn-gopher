@@ -1,3 +1,12 @@
+# June 7, 2019
+
+The server has been unreachable for the past three days. I installed
+a new router at my house, and had to fight with Comcast for hours in
+order to get access to the port forwarding settings again. I will be
+monitoring for further connectivity issues.
+
+The decentralized internet, brought to you by XFINITY (tm).
+
 # May 11, 2019
 
 The server has been moved from an RPi 1 Model B to an RPi 3.
