@@ -31,8 +31,8 @@ i(https://news.ycombinator.com). All stories and discussions have
 ibeen converted to plain-text ASCII. Have fun exploring the site!
 i________________________________________________________________
 i
+=echo "Updated `date -r "/var/gopher/live/" +"%Y-%m-%d %H:%M:%S %Z"`"
 1Live Feed	/live/p1/
-=echo "i(last updated `/usr/local/bin/time_since_update /var/gopher/live/p1/gophermap`)"
 i
 1Archive	/archive
 1Guestbook	/guestbook
