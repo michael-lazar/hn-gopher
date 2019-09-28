@@ -53,7 +53,7 @@ def dump_gophermap(cursor):
 
     with open(GUESTBOOK_GOPHERMAP, 'w') as fp:
         fp.write(textwrap.dedent(r"""
-            1Home	/
+            i[HN Gopher] Guestbook
             i 
             i (`/\
             i `=\/\ __...--~~~~~-._   _.-~~~~~--...__
