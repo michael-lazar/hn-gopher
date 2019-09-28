@@ -20,7 +20,7 @@ Vagrant.configure(2) do |config|
     # Setup the system
     timedatectl set-timezone UTC
     apt install -y build-essential
-    apt install -y curl lynx vim sqlite
+    apt install -y curl lynx vim sqlite w3m
     apt install -y python3 python3-pip python3-requests python3-lxml python3-unidecode
 
     pip3 install html2text==2018.1.9

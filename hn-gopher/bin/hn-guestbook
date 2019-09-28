@@ -10,7 +10,6 @@ import textwrap
 from functools import partial
 from datetime import datetime
 
-import requests
 from unidecode import unidecode
 
 DB_FILE = '/var/lib/hngopher/hngopher.db'

@@ -2,7 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-apt install -y curl lynx vim sqlite openssl
+apt install -y curl lynx vim sqlite openssl w3m
 apt install -y python3 python3-pip python3-requests python3-lxml python3-unidecode
 apt install -y libwrap0-dev
 pip3 install html2text==2018.1.9
