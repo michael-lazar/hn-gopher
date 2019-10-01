@@ -29,7 +29,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--log-file')
 parser.add_argument('--data-dir', default='/var/gopher')
 parser.add_argument('--page-size', default=20, type=int)
-parser.add_argument('--page-count', default=5, type=int)
+parser.add_argument('--page-count', default=3, type=int)
 parser.add_argument('--line-width', default=67, type=int)
 args = parser.parse_args()
 
@@ -156,82 +156,54 @@ def append_comment(comment, lines, level):
         append_comment(child, lines, level + 1)
 
 
-def generate_comments_page(story, base_dir):
-    resp = safe_request(HN_SEARCH_URL + 'items/{}'.format(story['id']))
-    data = resp.json()
-
-    title = sanitize(story['title'], truncate=True, width=args.line_width - 12)
-    lines = [
-        'i[HN Gopher] {}'.format(title),
-        'i ',
-        'i' + '_' * args.line_width,
-        'i ',
-    ]
-    for child in data['children']:
-        append_comment(child, lines, 0)
-
-    lines.append('i' + '_' * args.line_width)
-    lines.append('i(page generated {:%Y-%m-%d %H:%M} UTC)'.format(datetime.utcnow()))
-
-    filename = os.path.join(base_dir, 'items', str(story['id']), 'comments', 'gophermap')
-    write_ascii_file(filename, '\n'.join(lines))
-
-
 def generate_story_page(story, base_dir):
     story_dir = os.path.join(base_dir, 'items', str(story['id']))
 
     title = sanitize(story['title'], truncate=True, width=args.line_width - 12)
     lines = [
         'i[HN Gopher] {}'.format(title),
-        'i ',
         'i' + '_' * args.line_width,
         'i ',
     ]
 
     title = sanitize(story['title'])
-    for line in textwrap.wrap(
-            title,
-            width=args.line_width,
-            initial_indent='Title  : ',
-            subsequent_indent='         ',
-    ):
+    for line in textwrap.wrap(title, width=args.line_width):
         lines.append('i' + line)
+    lines.append('i ')
+
+    text = story.get('text')
+    if text:
+        text = sanitize(text, is_html=True)
+        for line in textwrap.wrap(text, width=args.line_width):
+            lines.append('i' + line)
+        lines.append('i ')
 
     author = sanitize(story['by'])
     lines.append('iAuthor : {}'.format(author))
     created = datetime.utcfromtimestamp(story['time'])
     humanized = humanize_timestamp(story['time'])
-    lines.append('iDate   : {:%Y-%m-%d %H:%M} UTC ({})'.format(created, humanized))
     lines.append('iScore  : {} points'.format(story['score']))
-
-    text = story.get('text', '-')
-    text = sanitize(text, is_html=True)
-    for line in textwrap.wrap(
-            text,
-            width=args.line_width,
-            initial_indent='Text   : ',
-            subsequent_indent='         ',
-    ):
-        lines.append('i' + line)
-
-    lines.append('i ')
+    lines.append('iDate   : {:%Y-%m-%d %H:%M} UTC ({})'.format(created, humanized))
     url = story.get('url')
+
     if url:
+        lines.append('i ')
         hostname = sanitize(urlparse(url).hostname)
-        line = 'h[HN Gopher] {} - web link ({})\tURL:{}'
-        lines.append(line.format(story['id'], hostname, url))
+        lines.append('hweb link ({})\tURL:{}'.format(hostname, url))
 
         logger.info(url)
         dump = sanitize(scrape_website(url))
         dump_filename = os.path.join(story_dir, 'dump.txt')
         write_ascii_file(dump_filename, dump)
-        line = '0[HN Gopher] {} - cached page\tdump.txt'
-        lines.append(line.format(story['id']))
+        lines.append('0w3m dump ({})\tdump.txt'.format(hostname))
 
-    line = '1[HN Gopher] {} - comments ({})\tcomments'
-    lines.append(line.format(story['id'], story['descendants']))
-
+    resp = safe_request(HN_SEARCH_URL + 'items/{}'.format(story['id']))
+    comments = resp.json()
     lines.append('i ')
+    if comments.get('children'):
+        for child in comments['children']:
+            append_comment(child, lines, 0)
+
     lines.append('i' + '_' * args.line_width)
     lines.append('i(page generated {:%Y-%m-%d %H:%M} UTC)'.format(datetime.utcnow()))
 
@@ -244,14 +216,12 @@ def generate_listing_page(page_number, story_gen, base_dir):
 
     lines = [
         'i[HN Gopher] Live Feed - Page {}'.format(page_number),
-        'i ',
         'i' + '_' * args.line_width
     ]
     for _ in range(args.page_size):
         story = next(story_gen)
 
         generate_story_page(story, base_dir)
-        generate_comments_page(story, base_dir)
 
         title = sanitize(story['title'], truncate=True)
         link = '1{}\t/live/items/{}'.format(title, story['id'])
