@@ -122,7 +122,7 @@ def humanize_timestamp(timestamp):
 def write_ascii_file(filename, text):
     directory = os.path.dirname(filename)
     os.makedirs(directory, exist_ok=True)
-    with io.open(filename, 'w+', encoding='ascii', errors='replace') as fp:
+    with io.open(filename, 'w+', encoding='ascii', errors='backslashreplace') as fp:
         fp.writelines(text)
 
 
@@ -192,7 +192,7 @@ def generate_story_page(story, base_dir):
         lines.append('hweb link ({})\tURL:{}'.format(hostname, url))
 
         logger.info(url)
-        dump = sanitize(scrape_website(url))
+        dump = url + '\n\n' + sanitize(scrape_website(url))
         dump_filename = os.path.join(story_dir, 'dump.txt')
         write_ascii_file(dump_filename, dump)
         lines.append('0w3m dump ({})\tdump.txt'.format(hostname))

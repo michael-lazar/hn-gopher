@@ -1,3 +1,31 @@
+# October 1, 2019
+
+I've made some changes to the layout of the live feed. Lately I have
+been trying to embrace gopher-centric design and menu hierarchies:
+
+- The menu layout has been tweaked slightly to reduce clutter.
+
+- The link to the parent page is no longer included at the top of
+  each page's menu. Instead, you are encouraged to use your gopher
+  client's back button.
+
+- Relative timestamps are no longer shown next to comments because
+  they don't add much value and become out-of-date when viewing old
+  pages.
+
+In addition, there is a new option to view a cached, plain-text copy
+of a linked story. The text dump is generated using the "w3m -dump".
+command. It's far from perfect, but it may be useful if you want to
+avoid firing up a web browser.
+
+Lastly, I have reduced the number of stories in the live feed from
+100 (20x5 pages) to 60 (20x3 pages). This is in-part to offset the
+additional storage that will be needed to archive the w3m page dumps.
+
+These changes come with a much needed refactoring of the script used
+to scrape hacker news stories. If you notice any new bugs or oddities,
+please send me an email or open an issue on github.
+
 # June 7, 2019
 
 The server has been unreachable for the past three days. I installed
