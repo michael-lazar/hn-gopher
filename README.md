@@ -1,31 +1,5 @@
-```
-                         _    _            _               _   _
-                        | |  | |          | |             | \ | |  hngopher.com:70
-                        | |__| | __ _  ___| | _____ _ __  |  \| | _____      _____
-                        |  __  |/ _` |/ __| |/ / _ \ '__| | . ` |/ _ \ \ /\ / / __|
-                        | |  | | (_| | (__|   <  __/ |    | |\  |  __/\ V  V /\__ \
-                        |_|  |_|\__,_|\___|_|\_\___|_|    |_| \_|\___| \_/\_/ |___/
-	
-	                           - The Underground Hacker News Mirror
-                                            (updated hourly)
-	
-	                                           _________________
-                                                  |\                \
-	                                          | \                \
-	                             _     _      |\ \________________\
-                                    (>\---/<)     |\\ |      ____     |
-                                    ,'     `.     |.\ |     |\   \    |
-                                   /  q   p  \    |   |     |.\   \___|____
-                                  (  >(_Y_)<  )    \  |     ||\\   \       \
-                                   >-' `-' `-<-.    \ |     || \\___\       \
-                                  /  _.,,  ,,,- \    \|_____||  ||  !\_______\
-                                 /,    )`  '(    )   ______ ||  ||  !  . . . |
-                                ; `._.'      `--<    \000  \~\\ ||  !   . .  |
-                               :     \        |  )    \000 9\ \\||  !    .   |
-                               \      )       ;_/      \000 9\ \.|  !        |
-                                `._ _/_  ___.'-'''      \000 9\ \|__!________/
-                                   `--'''                ^^^^^`` \/_____\
-```
+
+![Screenshot](screenshot.png)
 
 ---
 
@@ -63,11 +37,15 @@ $ cd hn-gopher
 $ sudo ./deploy.sh
 ```
 
-## License
-
-AGPLv3
-
 ## Disclaimer
 
 *This project is not affiliated with, maintained, authorized, endorsed or sponsored by the Y Combinator company.*
 
+## License
+
+[The Human Software License](https://license.mozz.us)
+
+> A hobbyist software license that promotes maintainer happiness
+> through personal interactions. Non-human
+> [legal entities](https://en.wikipedia.org/wiki/Legal_person) such as
+> corporations and agencies aren't allowed to participate.
