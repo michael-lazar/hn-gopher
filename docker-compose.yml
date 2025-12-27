@@ -1,0 +1,9 @@
+services:
+  hngopher:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hngopher
+    volumes:
+      - ./:/opt/hngopher/
+      - ./public:/var/gopher/

@@ -2,6 +2,6 @@
 .idea
 *.o
 hn-gopher/var/gopher/live/*
-hn-gopher/var/gopher/archive/2017
-hn-gopher/var/gopher/guestbook/gophermap
+public/archive/2017
+public/guestbook/gophermap
 .DS_Store
