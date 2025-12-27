@@ -520,10 +520,10 @@ int main(int argc, char *argv[])
 #endif
 
 	/* Refuse to run as root */
-#ifdef HAVE_PASSWD
-	if (st.opt_root && getuid() == 0)
-		die(&st, ERR_ACCESS, "Cowardly refusing to run as root");
-#endif
+//#ifdef HAVE_PASSWD
+//	if (st.opt_root && getuid() == 0)
+//		die(&st, ERR_ACCESS, "Cowardly refusing to run as root");
+//#endif
 
 	/* Try to get shared memory */
 #ifdef HAVE_SHMEM
@@ -707,8 +707,8 @@ get_selector:
 	/* Everyone must have read access but no write access */
 	if ((file.st_mode & S_IROTH) == 0)
 		die(&st, ERR_ACCESS, "File or directory not world-readable");
-//	if ((file.st_mode & S_IWOTH) != 0)
-//		die(&st, ERR_ACCESS, "File or directory world-writeable");
+	if ((file.st_mode & S_IWOTH) != 0)
+		die(&st, ERR_ACCESS, "File or directory world-writeable");
 
 	/* If stat said it was a dir then it's a menu */
 	if ((file.st_mode & S_IFMT) == S_IFDIR) st.req_filetype = TYPE_MENU;

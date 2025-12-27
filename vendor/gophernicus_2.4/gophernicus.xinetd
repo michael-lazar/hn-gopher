@@ -4,7 +4,7 @@ service gopher
 {
 	socket_type	= stream        
 	wait		= no
-	user		= nobody
+	user		= root
 	server		= /usr/sbin/in.gophernicus
 	server_args	= -r/var/gopher -h@HOSTNAME@
 	disable		= no

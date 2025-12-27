@@ -4,7 +4,7 @@ service gopher
     socket_type     = stream
     protocol        = tcp
     wait            = no
-    user            = nobody
+    user            = root
     server          = /usr/sbin/in.gophernicus
     server_args     = -h localhost:7070 -l /var/log/gophernicus/server.log -f /usr/lib/gophernicus/filters -w 67 -nf -nd
     port            = 70
