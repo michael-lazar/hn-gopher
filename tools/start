@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
+docker-compose build hngopher
 docker-compose up hngopher
