@@ -9,7 +9,7 @@ import textwrap
 import subprocess
 from tempfile import TemporaryDirectory
 from time import sleep
-from datetime import datetime
+from datetime import datetime, UTC
 from logging.handlers import RotatingFileHandler
 from urllib.parse import urlparse
 
@@ -37,7 +37,7 @@ logger = logging.getLogger('hn-scrape')
 
 # No need to escape markdown sensitive characters with backslashes because we
 # won't actually be rendering the text in a markdown engine.
-regex_noop = re.compile(r'a^')
+regex_noop = re.compile(r'(a)(^)')
 html2text_conf.RE_MD_CHARS_MATCHER = regex_noop
 html2text_conf.RE_MD_BACKSLASHMATCHER = regex_noop
 html2text_conf.RE_MD_DOT_MATCHER = regex_noop
@@ -99,7 +99,7 @@ def scrape_website(url):
 
 
 def humanize_timestamp(timestamp):
-    timedelta = datetime.utcnow() - datetime.utcfromtimestamp(timestamp)
+    timedelta = datetime.now(UTC) - datetime.fromtimestamp(timestamp, UTC)
     seconds = int(timedelta.total_seconds())
     if seconds < 60:
         return 'moments ago'
@@ -180,7 +180,7 @@ def generate_story_page(story, base_dir):
 
     author = sanitize(story['by'])
     lines.append('iAuthor : {}'.format(author))
-    created = datetime.utcfromtimestamp(story['time'])
+    created = datetime.fromtimestamp(story['time'], UTC)
     humanized = humanize_timestamp(story['time'])
     lines.append('iScore  : {} points'.format(story['score']))
     lines.append('iDate   : {:%Y-%m-%d %H:%M} UTC ({})'.format(created, humanized))
@@ -205,7 +205,7 @@ def generate_story_page(story, base_dir):
             append_comment(child, lines, 0)
 
     lines.append('i' + '_' * args.line_width)
-    lines.append('i(page generated {:%Y-%m-%d %H:%M} UTC)'.format(datetime.utcnow()))
+    lines.append('i(page generated {:%Y-%m-%d %H:%M} UTC)'.format(datetime.now(UTC)))
 
     filename = os.path.join(story_dir, 'gophermap')
     write_ascii_file(filename, '\n'.join(lines))
@@ -243,7 +243,7 @@ def generate_listing_page(page_number, story_gen, base_dir):
 
     lines.append('i ')
     lines.append('i' + '_' * args.line_width)
-    lines.append('i(page generated {:%Y-%m-%d %H:%M} UTC)'.format(datetime.utcnow()))
+    lines.append('i(page generated {:%Y-%m-%d %H:%M} UTC)'.format(datetime.now(UTC)))
 
     filename = os.path.join(base_dir, 'p{}'.format(page_number), 'gophermap')
     write_ascii_file(filename, '\n'.join(lines))

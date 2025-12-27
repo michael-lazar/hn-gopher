@@ -10,6 +10,6 @@ i ===(     )==========\\|//====================
 i_____\___/___________`---`___________________________________________
 i
 i
-=/usr/local/bin/hn-guestbook
+=/opt/hngopher/scripts/hn-guestbook.py
 i
 1Return to the previous page	/guestbook

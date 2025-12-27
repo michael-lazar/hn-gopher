@@ -1,7 +1,9 @@
 .vagrant
 .idea
 *.o
-hn-gopher/var/gopher/live/*
 public/archive/2017
 public/guestbook/gophermap
 .DS_Store
+data/*
+public/archive/2*
+public/live

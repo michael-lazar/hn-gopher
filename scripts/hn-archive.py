@@ -12,7 +12,7 @@ import logging
 import tempfile
 import argparse
 import subprocess
-from datetime import datetime
+from datetime import datetime, UTC
 from logging.handlers import RotatingFileHandler
 
 
@@ -46,7 +46,7 @@ args = parse_args()
 
 _logger = setup_log(args.log_file)
 
-now = datetime.utcnow()
+now = datetime.now(UTC)
 _logger.info('Building archive for {:%Y-%m-%d}'.format(now))
 
 try:
@@ -96,14 +96,14 @@ try:
                     'i \n',
                     'i      ___ _  _ ____    ____ ____ ____ _  _ _ _  _ ____\n',
                     'i       |  |__| |___    |__| |__/ |    |__| | |  | |___\n',
-                    'i       |  |  | |___    |  | |  \ |___ |  | |  \/  |___\n',
+                    'i       |  |  | |___    |  | |  \\ |___ |  | |  \\/  |___\n',
                     'i \n',
                     'i                                   __\n',
                     'i                                  /__\\\n',
                     'i                      ____________|  |\n',
                     'i                      |_|_|_|_|_|_|  |\n',
                     'i                      |_|_|_|_|_|_|__|\n',
-                    'i                     A@\|_|_|_|_|_|/@@Aa\n',
+                    'i                     A@\\|_|_|_|_|_|/@@Aa\n',
                     'i                 aaA@@@@@@@@@@@@@@@@@@@aaaA\n',
                     'i                A@@@@@@@@@@@DWB@@@@@@@@@@@@A\n',
                     'i              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n',
