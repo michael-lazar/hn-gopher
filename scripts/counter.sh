@@ -7,7 +7,7 @@
 ##
 
 # Figure out a safe file to keep our counter
-FILE=/var/tmp/gopher-counter
+FILE=/opt/hngopher/data/gopher-counter
 
 # Get count and the previous visitors IP address
 COUNT="`cut -d' ' -f1 $FILE`"
