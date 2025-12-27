@@ -38,5 +38,5 @@ i
 1Guestbook	/guestbook
 1Information	/about
 i
-=echo "We're not counting, but you're visitor number `/usr/local/bin/counter.sh`"
+=echo "We're not counting, but you're visitor number `/opt/hngopher/scripts/counter.sh`"
 i________________________________________________________________

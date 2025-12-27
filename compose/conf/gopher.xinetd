@@ -1,0 +1,12 @@
+service gopher
+{
+    disable         = no
+    socket_type     = stream
+    protocol        = tcp
+    wait            = no
+    user            = nobody
+    server          = /usr/sbin/in.gophernicus
+    server_args     = -h hngopher.com -l /var/log/gophernicus/server.log -f /usr/lib/gophernicus/filters -w 67 -nf -nd
+    port            = 70
+    flags           = IPv4
+}

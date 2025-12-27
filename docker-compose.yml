@@ -2,8 +2,10 @@ services:
   hngopher:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: compose/Dockerfile
     container_name: hngopher
+    ports:
+      - "7070:70"
     volumes:
       - ./:/opt/hngopher/
       - ./public:/var/gopher/
