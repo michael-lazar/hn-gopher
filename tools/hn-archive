@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker-compose run --rm hngopher /opt/hngopher/scripts/hn-archive.py "$@"
+docker-compose run --rm hngopher /opt/hngopher/src/hn-archive.py "$@"

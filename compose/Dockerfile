@@ -19,7 +19,7 @@ RUN make && make install && make clean-build
 RUN mkdir -p /var/gopher /opt/hngopher /var/log/gophernicus
 
 # Copy configuration
-COPY compose/conf/gophernicus.env /etc/default/gophernicus
+COPY conf/gophernicus.env /etc/default/gophernicus
 COPY compose/conf/gopher.xinetd /etc/xinetd.d/gopher
 COPY compose/conf/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

@@ -1,0 +1,6 @@
+[Unit]
+Description=hn-scrape
+
+[Service]
+Type=oneshot
+ExecStart=/opt/hngopher/src/hn-scrape.py

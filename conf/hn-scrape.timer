@@ -1,0 +1,9 @@
+[Unit]
+Description=Run hn-scrape hourly on the hour
+
+[Timer]
+OnCalendar=*-*-* *:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

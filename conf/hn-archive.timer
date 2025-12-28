@@ -1,0 +1,9 @@
+[Unit]
+Description=Run hn-archive daily at 23:30
+
+[Timer]
+OnCalendar=*-*-* 23:30:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
