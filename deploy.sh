@@ -35,8 +35,11 @@ cp $DIR/conf/hn-archive.timer /etc/systemd/system/
 cp $DIR/conf/hn-scrape.service /etc/systemd/system/
 cp $DIR/conf/hn-scrape.timer /etc/systemd/system/
 
-systemctl daemon-relead
-systemctl enable --now hn-scrape.timer hn-archive.timer gophernicus
+systemctl daemon-reload
+systemctl enable --now hn-scrape.timer hn-archive.timer
 
 # Rebuild the guestbook
-/opt/hngopher/src/hn-guestbook dump
+/opt/hngopher/src/hn-guestbook.py dump
+
+# Health check
+curl gopher://localhost:7070
