@@ -2,7 +2,7 @@
 Description=Gophernicus gopher server
 
 [Socket]
-ListenStream=70
+ListenStream=7008
 Accept=yes
 
 [Install]

@@ -2,7 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-apt install update && apt install -y \
+apt update && apt install -y \
     build-essential libwrap0-dev \
     curl lynx vim sqlite3 w3m procps \
     python3 python3-html2text  \
@@ -37,9 +37,10 @@ cp $DIR/conf/hn-scrape.timer /etc/systemd/system/
 
 systemctl daemon-reload
 systemctl enable --now hn-scrape.timer hn-archive.timer
+systemctl status hn-scrape hn-archive gophernicus.socket
 
 # Rebuild the guestbook
 /opt/hngopher/src/hn-guestbook.py dump
 
 # Health check
-curl gopher://localhost:7070
+curl gopher://localhost:7008
